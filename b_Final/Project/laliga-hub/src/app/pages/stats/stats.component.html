@@ -1,0 +1,322 @@
+<div class="stats-page">
+  <!-- Header with Season Selector -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>Statistics</h1>
+      <p class="subtitle">{{ currentSeason?.displayName || 'La Liga' }} Season Stats</p>
+    </div>
+    <app-season-selector 
+      (seasonChange)="onSeasonChange($event)">
+    </app-season-selector>
+  </div>
+
+  <!-- Loading State -->
+  <app-loading-spinner *ngIf="isLoading" message="Loading statistics..."></app-loading-spinner>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="error-container">
+    <i class="fa-solid fa-exclamation-circle"></i>
+    <p>{{ error }}</p>
+    <button class="btn btn-primary" (click)="loadStats()">
+      <i class="fa-solid fa-refresh"></i>
+      Try Again
+    </button>
+  </div>
+
+  <!-- Stats Content -->
+  <div *ngIf="!isLoading && !error" class="stats-content">
+    <!-- Tabs -->
+    <div class="stats-tabs">
+      <button 
+        class="tab-btn"
+        [class.active]="activeTab === 'scorers'"
+        (click)="setTab('scorers')">
+        <i class="fa-solid fa-futbol"></i>
+        <span>Top Scorers</span>
+      </button>
+      <button 
+        class="tab-btn"
+        [class.active]="activeTab === 'assists'"
+        (click)="setTab('assists')">
+        <i class="fa-solid fa-handshake"></i>
+        <span>Top Assists</span>
+      </button>
+      <button 
+        class="tab-btn"
+        [class.active]="activeTab === 'attack'"
+        (click)="setTab('attack')">
+        <i class="fa-solid fa-crosshairs"></i>
+        <span>Best Attack</span>
+      </button>
+      <button 
+        class="tab-btn"
+        [class.active]="activeTab === 'defense'"
+        (click)="setTab('defense')">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>Best Defense</span>
+      </button>
+      <button 
+        class="tab-btn"
+        [class.active]="activeTab === 'wins'"
+        (click)="setTab('wins')">
+        <i class="fa-solid fa-trophy"></i>
+        <span>Most Wins</span>
+      </button>
+      <button 
+        class="tab-btn"
+        [class.active]="activeTab === 'goals'"
+        (click)="setTab('goals')">
+        <i class="fa-solid fa-fire"></i>
+        <span>Most Entertaining</span>
+      </button>
+    </div>
+
+    <!-- Top Scorers Table -->
+    <div class="stats-table-container" *ngIf="activeTab === 'scorers'">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th class="rank-col">#</th>
+            <th class="player-col">Player</th>
+            <th class="team-col">Team</th>
+            <th class="stat-col">Goals</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let player of topScorers; let i = index"
+              class="stat-row clickable"
+              [class.top-three]="i < 3"
+              (click)="onPlayerClick(player.player.id)">
+            <td class="rank-col">
+              <span class="rank" [class.gold]="i === 0" [class.silver]="i === 1" [class.bronze]="i === 2">
+                {{ i + 1 }}
+              </span>
+            </td>
+            <td class="player-col">
+              <div class="player-info">
+                <img 
+                  [src]="getPlayerImageUrl(player.player.id)" 
+                  [alt]="player.player.name"
+                  class="player-photo"
+                  onerror="this.src='https://www.sofascore.com/static/images/placeholders/player.svg'">
+                <div class="player-details">
+                  <span class="player-name">{{ player.player.name }}</span>
+                  <span class="player-position" *ngIf="player.player.position">{{ player.player.position }}</span>
+                </div>
+              </div>
+            </td>
+            <td class="team-col" (click)="onTeamClick(player.team.id); $event.stopPropagation()">
+              <div class="team-info">
+                <img 
+                  [src]="getTeamImageUrl(player.team.id)" 
+                  [alt]="player.team.name"
+                  class="team-logo">
+                <span class="team-name">{{ player.team.name }}</span>
+              </div>
+            </td>
+            <td class="stat-col">
+              <span class="stat-value highlight">{{ player.statistics.goals }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Top Assists Table -->
+    <div class="stats-table-container" *ngIf="activeTab === 'assists'">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th class="rank-col">#</th>
+            <th class="player-col">Player</th>
+            <th class="team-col">Team</th>
+            <th class="stat-col">Assists</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let player of topAssists; let i = index"
+              class="stat-row clickable"
+              [class.top-three]="i < 3"
+              (click)="onPlayerClick(player.player.id)">
+            <td class="rank-col">
+              <span class="rank" [class.gold]="i === 0" [class.silver]="i === 1" [class.bronze]="i === 2">
+                {{ i + 1 }}
+              </span>
+            </td>
+            <td class="player-col">
+              <div class="player-info">
+                <img 
+                  [src]="getPlayerImageUrl(player.player.id)" 
+                  [alt]="player.player.name"
+                  class="player-photo"
+                  onerror="this.src='https://www.sofascore.com/static/images/placeholders/player.svg'">
+                <div class="player-details">
+                  <span class="player-name">{{ player.player.name }}</span>
+                  <span class="player-position" *ngIf="player.player.position">{{ player.player.position }}</span>
+                </div>
+              </div>
+            </td>
+            <td class="team-col" (click)="onTeamClick(player.team.id); $event.stopPropagation()">
+              <div class="team-info">
+                <img 
+                  [src]="getTeamImageUrl(player.team.id)" 
+                  [alt]="player.team.name"
+                  class="team-logo">
+                <span class="team-name">{{ player.team.name }}</span>
+              </div>
+            </td>
+            <td class="stat-col">
+              <span class="stat-value highlight">{{ player.statistics.assists }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Team Stats Table -->
+    <div class="stats-table-container" *ngIf="activeTab !== 'scorers' && activeTab !== 'assists'">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th class="rank-col">#</th>
+            <th class="team-col">Team</th>
+            <th class="games-col">P</th>
+            <th class="wins-col">W</th>
+            <th class="draws-col">D</th>
+            <th class="losses-col">L</th>
+            <th class="gf-col">GF</th>
+            <th class="ga-col">GA</th>
+            <th class="stat-col">{{ getStatLabel() }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let team of getCurrentList(); let i = index"
+              class="stat-row"
+              [class.top-three]="i < 3"
+              (click)="onTeamClick(team.team.id)">
+            <!-- Rank -->
+            <td class="rank-col">
+              <span class="rank" [class.gold]="i === 0" [class.silver]="i === 1" [class.bronze]="i === 2">
+                {{ i + 1 }}
+              </span>
+            </td>
+            
+            <!-- Team -->
+            <td class="team-col">
+              <div class="team-info">
+                <img 
+                  [src]="getTeamImageUrl(team.team.id)" 
+                  [alt]="team.team.name"
+                  class="team-logo">
+                <span class="team-name">{{ team.team.name }}</span>
+              </div>
+            </td>
+            
+            <!-- Games Played -->
+            <td class="games-col">{{ team.matches }}</td>
+            
+            <!-- Wins -->
+            <td class="wins-col">{{ team.wins }}</td>
+            
+            <!-- Draws -->
+            <td class="draws-col">{{ team.draws }}</td>
+            
+            <!-- Losses -->
+            <td class="losses-col">{{ team.losses }}</td>
+            
+            <!-- Goals For -->
+            <td class="gf-col">{{ team.scoresFor }}</td>
+            
+            <!-- Goals Against -->
+            <td class="ga-col">{{ team.scoresAgainst }}</td>
+            
+            <!-- Stat Value -->
+            <td class="stat-col">
+              <div class="stat-value" [class.defense-stat]="activeTab === 'defense'">
+                <span class="value">{{ getStatValue(team) }}</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Empty State -->
+      <div *ngIf="getCurrentList().length === 0" class="empty-state">
+        <i class="fa-solid fa-chart-simple"></i>
+        <p>No statistics available</p>
+      </div>
+    </div>
+
+    <!-- Quick Stats Cards -->
+    <div class="quick-stats" *ngIf="topScorers.length > 0 || topAttack.length > 0">
+      <h2>Season Highlights</h2>
+      <div class="quick-stats-grid">
+        <!-- Top Scorer -->
+        <div class="quick-stat-card gold clickable" *ngIf="topScorers[0]" (click)="onPlayerClick(topScorers[0].player.id)">
+          <div class="card-header">
+            <i class="fa-solid fa-crown"></i>
+            <span>Top Scorer</span>
+          </div>
+          <div class="card-body">
+            <img [src]="getPlayerImageUrl(topScorers[0].player.id)" [alt]="topScorers[0].player.name" class="player-img"
+                 onerror="this.src='https://www.sofascore.com/static/images/placeholders/player.svg'">
+            <div class="card-info">
+              <span class="name">{{ topScorers[0].player.name }}</span>
+              <span class="stat">{{ topScorers[0].statistics.goals }} Goals</span>
+              <span class="sub-stat">{{ topScorers[0].team.name }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Assists -->
+        <div class="quick-stat-card blue clickable" *ngIf="topAssists[0]" (click)="onPlayerClick(topAssists[0].player.id)">
+          <div class="card-header">
+            <i class="fa-solid fa-handshake"></i>
+            <span>Top Assists</span>
+          </div>
+          <div class="card-body">
+            <img [src]="getPlayerImageUrl(topAssists[0].player.id)" [alt]="topAssists[0].player.name" class="player-img"
+                 onerror="this.src='https://www.sofascore.com/static/images/placeholders/player.svg'">
+            <div class="card-info">
+              <span class="name">{{ topAssists[0].player.name }}</span>
+              <span class="stat">{{ topAssists[0].statistics.assists }} Assists</span>
+              <span class="sub-stat">{{ topAssists[0].team.name }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Best Attack -->
+        <div class="quick-stat-card green" *ngIf="topAttack[0]" (click)="onTeamClick(topAttack[0].team.id)">
+          <div class="card-header">
+            <i class="fa-solid fa-crosshairs"></i>
+            <span>Best Attack</span>
+          </div>
+          <div class="card-body">
+            <img [src]="getTeamImageUrl(topAttack[0].team.id)" [alt]="topAttack[0].team.name" class="team-img">
+            <div class="card-info">
+              <span class="name">{{ topAttack[0].team.name }}</span>
+              <span class="stat">{{ topAttack[0].scoresFor }} Goals Scored</span>
+              <span class="sub-stat">{{ topAttack[0].matches }} games played</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Best Defense -->
+        <div class="quick-stat-card orange" *ngIf="topDefense[0]" (click)="onTeamClick(topDefense[0].team.id)">
+          <div class="card-header">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Best Defense</span>
+          </div>
+          <div class="card-body">
+            <img [src]="getTeamImageUrl(topDefense[0].team.id)" [alt]="topDefense[0].team.name" class="team-img">
+            <div class="card-info">
+              <span class="name">{{ topDefense[0].team.name }}</span>
+              <span class="stat">{{ topDefense[0].scoresAgainst }} Goals Conceded</span>
+              <span class="sub-stat">{{ topDefense[0].matches }} games played</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

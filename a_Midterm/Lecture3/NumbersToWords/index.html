@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Document</title>
+</head>
+<body>
+    <script>
+
+        //Numbers to Words
+        //Write a function that takes a number as an argument and returns a string representing
+        //the number in words. For example, given the number 1234, the function should return
+        //"one thousand two hundred thirty four." The function should support numbers up to 999_999_999.
+        //Bonus: Implement it for the Macedonian language (take not that the thousands and millions
+        //are genderedin Macedonian).
+        //Super Extra Bonus: Implement a second parameter to the function that takes a list of language
+        //codes (maybe as a rest parameter) and returns the number in those languages. For example,
+        //given the number 1234 and the language code "mk", the function should return
+        //"една илјада двеста триесет и четири.", and given the number 1234 and the language code "en",
+        //the function should return "one thousand two hundred thirty four." The return value should be an
+        //object that has the language code as the object key, and the values as the key's values.
+        
+        const NUMBERS = {
+            en: {
+                units: ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'],
+                teens: ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'],
+                tens: ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'],
+                scales: ['', 'thousand', 'million']
+            },
+            mk: {
+                units: {
+                    m: ['', 'еден', 'два', 'три', 'четири', 'пет', 'шест', 'седум', 'осум', 'девет'],
+                    f: ['', 'една', 'две', 'три', 'четири', 'пет', 'шест', 'седум', 'осум', 'девет']
+                },
+                teens: ['десет', 'единаесет', 'дванаесет', 'тринаесет', 'четиринаесет', 'петнаесет', 'шеснаесет', 'седумнаесет', 'осумнаесет', 'деветнаесет'],
+                tens: ['', '', 'дваесет', 'триесет', 'четириесет', 'педесет', 'шеесет', 'седумдесет', 'осумдесет', 'деведесет'],
+                scales: {
+                    0: ['', '', ''],
+                    1: ['илјада', 'илјади'], // [1, 2+]
+                    2: ['милион', 'милиони'] // [1, 2+]
+                }
+            }
+        };
+
+        function convertGroupEn(num) {
+            if (num === 0) return '';
+            let result = [];
+            
+            // Hundreds
+            if (num >= 100) {
+                result.push(NUMBERS.en.units[Math.floor(num / 100)] + ' hundred');
+                num %= 100;
+            }
+            
+            // Tens and Units
+            if (num >= 10 && num < 20) {
+                result.push(NUMBERS.en.teens[num - 10]);
+            } else {
+                const tens = Math.floor(num / 10);
+                const units = num % 10;
+                if (tens > 0) result.push(NUMBERS.en.tens[tens]);
+                if (units > 0) result.push(NUMBERS.en.units[units]);
+            }
+            
+            return result.join(' ');
+        }
+
+        function convertGroupMk(num, gender = 'm') {
+            if (num === 0) return '';
+            let result = [];
+            
+            // Hundreds
+            if (num >= 100) {
+                result.push(num >= 200 ? NUMBERS.mk.units.f[Math.floor(num / 100)] + 'стотини' : 'сто');
+                num %= 100;
+            }
+            
+            // Tens and Units
+            if (num >= 10 && num < 20) {
+                result.push(NUMBERS.mk.teens[num - 10]);
+            } else {
+                const tens = Math.floor(num / 10);
+                const units = num % 10;
+                if (tens > 0) result.push(NUMBERS.mk.tens[tens]);
+                if (units > 0) {
+                    if (tens > 0) result.push('и');
+                    result.push(NUMBERS.mk.units[gender][units]);
+                }
+            }
+            
+            return result.join(' ');
+        }
+
+        function getScalePlural(num, scale) {
+            if (scale === 0) return '';
+            // Simplified logic: just check if number is 1 or not
+            return NUMBERS.mk.scales[scale][num === 1 ? 0 : 1];
+        }
+
+        function numberToWords(num, languages = ['en']) {
+            if (!Number.isInteger(num) || num < 0 || num > 999999999) {
+                throw new Error('Number must be an integer between 0 and 999,999,999');
+            }
+
+            if (num === 0) {
+                return languages.reduce((acc, lang) => ({
+                    ...acc,
+                    [lang]: lang === 'mk' ? 'нула' : 'zero'
+                }), {});
+            }
+
+            const result = {};
+
+            for (const lang of languages) {
+                if (!['en', 'mk'].includes(lang)) {
+                    throw new Error('Unsupported language code');
+                }
+
+                let groups = [];
+                let n = num;
+                
+                // Split into groups of 3 digits
+                for (let i = 0; i < 3 && n > 0; i++) {
+                    groups.unshift({
+                        value: n % 1000,
+                        scale: i
+                    });
+                    n = Math.floor(n / 1000);
+                }
+
+                let words = [];
+                if (lang === 'en') {
+                    groups.forEach(group => {
+                        if (group.value !== 0) {
+                            let part = convertGroupEn(group.value);
+                            if (group.scale > 0) {
+                                part += ' ' + NUMBERS.en.scales[group.scale];
+                            }
+                            words.push(part);
+                        }
+                    });
+                } else {  // mk
+                    groups.forEach(group => {
+                        if (group.value !== 0) {
+                            const gender = group.scale === 1 ? 'f' : 'm';
+                            let part = convertGroupMk(group.value, gender);
+                            if (group.scale > 0) {
+                                part += ' ' + getScalePlural(group.value, group.scale);
+                            }
+                            words.push(part);
+                        }
+                    });
+                }
+
+                result[lang] = words.join(' ') + '.';
+            }
+
+            return result;
+        }
+        //Demo
+        console.log(numberToWords(1234, ['en', 'mk']));
+        console.log(numberToWords(42, ['en', 'mk']));
+        console.log(numberToWords(999999999, ['en', 'mk']));
+        console.log(numberToWords(355, ['en', 'mk']));
+        
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<div class="match-card" [class.compact]="compact" [class.live]="isLive" (click)="onMatchClick()">
+  <!-- Date header -->
+  <div class="match-date" *ngIf="showDate && !compact">
+    <span class="date-text">{{ formattedDate }}</span>
+    <span class="round-text" *ngIf="match.league.round">{{ match.league.round }}</span>
+  </div>
+
+  <!-- Match content -->
+  <div class="match-content">
+    <!-- Home team -->
+    <div class="team home" (click)="onTeamClick($event, match.teams.home.id)">
+      <img 
+        [src]="match.teams.home.logo" 
+        [alt]="match.teams.home.name"
+        class="team-logo"
+        loading="lazy"
+      />
+      <span class="team-name" [class.winner]="match.teams.home.winner">
+        {{ match.teams.home.name }}
+      </span>
+    </div>
+
+    <!-- Score / Status -->
+    <div class="match-center">
+      <div class="score-container" [class.live]="isLive" [class.scheduled]="isScheduled">
+        <ng-container *ngIf="!isScheduled">
+          <span class="score home" [class.winner]="match.teams.home.winner">
+            {{ match.goals.home ?? '-' }}
+          </span>
+          <span class="score-divider">:</span>
+          <span class="score away" [class.winner]="match.teams.away.winner">
+            {{ match.goals.away ?? '-' }}
+          </span>
+        </ng-container>
+        <span class="scheduled-time" *ngIf="isScheduled">
+          {{ formattedTime }}
+        </span>
+      </div>
+      <div class="match-status" [class.live]="isLive">
+        <span class="live-indicator" *ngIf="isLive"></span>
+        {{ statusText }}
+      </div>
+    </div>
+
+    <!-- Away team -->
+    <div class="team away" (click)="onTeamClick($event, match.teams.away.id)">
+      <span class="team-name" [class.winner]="match.teams.away.winner">
+        {{ match.teams.away.name }}
+      </span>
+      <img 
+        [src]="match.teams.away.logo" 
+        [alt]="match.teams.away.name"
+        class="team-logo"
+        loading="lazy"
+      />
+    </div>
+  </div>
+
+  <!-- Venue info -->
+  <div class="match-venue" *ngIf="!compact && match.fixture.venue.name">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+      <circle cx="12" cy="10" r="3"/>
+    </svg>
+    {{ match.fixture.venue.name }}
+  </div>
+</div>

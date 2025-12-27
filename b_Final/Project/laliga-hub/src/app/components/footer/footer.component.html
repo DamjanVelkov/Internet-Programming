@@ -1,0 +1,40 @@
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <div class="brand-logo-wrapper">
+          <img src="assets/myliga-logo.svg" alt="MyLiga" class="footer-logo" />
+        </div>
+        <span class="footer-title">My<span class="accent">Liga</span></span>
+        <p class="footer-desc">Your ultimate destination for La Liga football statistics, standings, and match information.</p>
+      </div>
+      
+      <div class="footer-links">
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <a routerLink="/">Home</a>
+          <a routerLink="/standings">Standings</a>
+          <a routerLink="/matches">Matches</a>
+          <a routerLink="/teams">Teams</a>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Statistics</h4>
+          <a routerLink="/stats" [queryParams]="{tab: 'scorers'}">Top Scorers</a>
+          <a routerLink="/stats" [queryParams]="{tab: 'assists'}">Top Assists</a>
+          <a routerLink="/stats" [queryParams]="{tab: 'goals'}">Engaging</a>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Data Source</h4>
+          <p class="data-note">Data provided by SofaScore API</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; {{ currentYear }} MyLiga. All rights reserved.</p>
+      <p class="disclaimer">This is a fan-made project for educational purposes. Not affiliated with LaLiga.</p>
+    </div>
+  </div>
+</footer>

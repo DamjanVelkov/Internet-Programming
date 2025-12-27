@@ -1,0 +1,93 @@
+<div class="movie-details-container" *ngIf="movie$ | async as movie">
+  <button (click)="goBack()" class="btn-back">← Back to Movies</button>
+
+  <div class="movie-content">
+    <h1>{{ movie.title }}</h1>
+    
+    <div class="details-grid">
+      <div class="detail-item">
+        <label>ID:</label>
+        <span>{{ movie.id }}</span>
+      </div>
+      <div class="detail-item">
+        <label>Year:</label>
+        <span>{{ movie.year }}</span>
+      </div>
+      <div class="detail-item">
+        <label>Director:</label>
+        <span>{{ movie.director }}</span>
+      </div>
+      <div class="detail-item">
+        <label>Rating:</label>
+        <span>{{ movie.rating || 'N/A' }}</span>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <label>Plot:</label>
+      <p>{{ movie.plot || 'N/A' }}</p>
+    </div>
+
+    <div class="detail-section">
+      <label>Genres:</label>
+      <ul class="genre-list">
+        <li *ngFor="let genre of movie.genre">{{ genre }}</li>
+      </ul>
+    </div>
+
+    <div class="detail-section" *ngIf="movie.oscars && (getOscarsSorted(movie.oscars) | json) !== '{}'">
+      <label>Oscars:</label>
+      <ul class="oscars-list">
+        <li *ngFor="let oscarType of getOscarsSorted(movie.oscars)">
+          <strong>{{ formatOscarType(oscarType) }}:</strong> {{ movie.oscars[oscarType] }}
+        </li>
+      </ul>
+    </div>
+
+    <div class="detail-section" *ngIf="movie.cast && movie.cast.length > 0">
+      <label>Cast:</label>
+      <ul class="cast-list">
+        <li *ngFor="let member of movie.cast">
+          <a (click)="viewActor(member.actor)" class="actor-link">{{ member.actor }}</a> as {{ member.character }}
+        </li>
+      </ul>
+    </div>
+
+    <div class="detail-section" *ngIf="relatedMoviesByGenre.length > 0">
+      <label>Similar Movies (by Genre):</label>
+      <ul class="related-movies-list">
+        <li *ngFor="let m of relatedMoviesByGenre">
+          <a (click)="viewMovie(m.id)" class="movie-link">{{ m.title }}</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="detail-section" *ngIf="relatedMoviesByDirector.length > 0">
+      <label>Similar Movies (by Director):</label>
+      <ul class="related-movies-list">
+        <li *ngFor="let m of relatedMoviesByDirector">
+          <a (click)="viewMovie(m.id)" class="movie-link">{{ m.title }}</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="detail-section" *ngIf="relatedMoviesByActor.length > 0">
+      <label>Similar Movies (by Actor):</label>
+      <ul class="related-movies-list">
+        <li *ngFor="let m of relatedMoviesByActor">
+          <a (click)="viewMovie(m.id)" class="movie-link">{{ m.title }}</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="actions-section">
+      <button (click)="editMovie(movie.id)" class="btn-action btn-edit">Edit</button>
+      <button (click)="deleteMovie(movie.id)" class="btn-action btn-delete">Delete</button>
+      <button (click)="addCast(movie.id)" class="btn-action btn-cast">Add Cast</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!(movie$ | async)" class="loading">
+  Loading movie details...
+</div>

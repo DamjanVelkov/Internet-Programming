@@ -1,0 +1,26 @@
+<div class="cast-add-container" *ngIf="movie$ | async as movie">
+  <button (click)="cancel()" class="btn-back">← Cancel</button>
+
+  <form class="cast-form">
+    <h1>Add Cast to {{ movie.title }}</h1>
+
+    <div class="form-group">
+      <label>Actor Name:</label>
+      <input type="text" [(ngModel)]="actor" name="actor" placeholder="Enter actor name..." required>
+    </div>
+
+    <div class="form-group">
+      <label>Character Name:</label>
+      <input type="text" [(ngModel)]="character" name="character" placeholder="Enter character name..." required>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" (click)="addCastMember()" class="btn-save">Add Cast Member</button>
+      <button type="button" (click)="cancel()" class="btn-cancel">Cancel</button>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="!(movie$ | async)" class="loading">
+  Loading movie...
+</div>

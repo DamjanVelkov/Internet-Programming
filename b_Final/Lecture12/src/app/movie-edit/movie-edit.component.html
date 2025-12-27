@@ -1,0 +1,56 @@
+<div class="movie-edit-container" *ngIf="movie">
+  <button (click)="cancel()" class="btn-back">← Cancel</button>
+
+  <form class="movie-form">
+    <h1>Edit Movie</h1>
+
+    <div class="form-group">
+      <label>ID:</label>
+      <input type="number" [value]="movie.id" disabled>
+    </div>
+
+    <div class="form-group">
+      <label>Title:</label>
+      <input type="text" [(ngModel)]="movie.title" name="title" required>
+    </div>
+
+    <div class="form-group">
+      <label>Year:</label>
+      <input type="number" [(ngModel)]="movie.year" name="year" required>
+    </div>
+
+    <div class="form-group">
+      <label>Director:</label>
+      <input type="text" [(ngModel)]="movie.director" name="director" required>
+    </div>
+
+    <div class="form-group">
+      <label>Plot:</label>
+      <textarea [(ngModel)]="movie.plot" name="plot" rows="4"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Rating:</label>
+      <input type="number" [(ngModel)]="movie.rating" name="rating" min="0" max="10" step="0.1">
+    </div>
+
+    <div class="form-group">
+      <label>Genres:</label>
+      <div class="genre-checkboxes">
+        <div *ngFor="let genre of genres" class="checkbox">
+          <input 
+            type="checkbox" 
+            [checked]="isGenreSelected(genre)" 
+            (change)="toggleGenre(genre)"
+            [id]="'genre-' + genre">
+          <label [for]="'genre-' + genre">{{ genre }}</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" (click)="saveMovie()" class="btn-save">Save</button>
+      <button type="button" (click)="cancel()" class="btn-cancel">Cancel</button>
+    </div>
+  </form>
+</div>

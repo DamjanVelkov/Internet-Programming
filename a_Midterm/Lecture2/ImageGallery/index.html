@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 3 - Image Gallery</title>
+    <link rel="stylesheet" href="gallery.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Exercise 3: Image Gallery</h1>
+            <p>Click on any image to view it in full size</p>
+        </header>
+
+        <main>
+            <div class="gallery-controls">
+                <button id="grid-view" class="view-btn active">Grid View</button>
+                <button id="list-view" class="view-btn">List View</button>
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Search images...">
+                    <button id="search-btn">🔍</button>
+                </div>
+            </div>
+
+            <div class="gallery" id="image-gallery">
+                <!-- Images will be dynamically loaded here -->
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Loading images...</p>
+            </div>
+        </main>
+
+        <!-- Modal for larger image view -->
+        <div class="modal" id="image-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-title">Image Title</h3>
+                    <button class="close-btn" id="close-modal">&times;</button>
+                </div>
+                
+                <div class="modal-body">
+                    <button class="nav-btn prev-btn" id="prev-btn">&#8249;</button>
+                    <div class="image-container">
+                        <img id="modal-image" src="" alt="">
+                        <div class="image-info">
+                            <p id="image-counter">1 of 12</p>
+                            <p id="image-name">Image name</p>
+                        </div>
+                    </div>
+                    <button class="nav-btn next-btn" id="next-btn">&#8250;</button>
+                </div>
+                
+                <div class="modal-footer">
+                    <button id="download-btn" class="action-btn">Download</button>
+                    <button id="share-btn" class="action-btn">Share</button>
+                    <button id="info-btn" class="action-btn">Info</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlay for modal background -->
+        <div class="modal-overlay" id="modal-overlay"></div>
+
+        <footer>
+            <p><a href="../Exercise02/index.html">← Back to Exercise 2</a> | <a href="../Exercise04/index.html">Next Exercise 4 →</a></p>
+        </footer>
+    </div>
+
+    <script src="gallery.js"></script>
+</body>
+</html>

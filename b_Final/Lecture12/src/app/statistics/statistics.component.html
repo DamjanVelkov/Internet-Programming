@@ -1,0 +1,118 @@
+<div class="statistics-container">
+  <h1>Statistics</h1>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3>Total Movies</h3>
+      <p class="stat-value">{{ totalMovies }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Total Actors</h3>
+      <p class="stat-value">{{ totalActors }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Total Genres</h3>
+      <p class="stat-value">{{ totalGenres }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Total Oscars</h3>
+      <p class="stat-value">{{ totalOscars }}</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Oscars by Type</h2>
+    <table class="stats-table">
+      <thead>
+        <tr>
+          <th>Oscar Type</th>
+          <th>Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let type of getOscarTypesSorted()">
+          <td>{{ formatOscarType(type) }}</td>
+          <td>{{ oscarsByType[type] }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="getOscarTypesSorted().length === 0" class="no-data">No oscars data</p>
+  </div>
+
+  <div class="section">
+    <h2>Oscars by Genre</h2>
+    <table class="stats-table">
+      <thead>
+        <tr>
+          <th>Genre</th>
+          <th>Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let genre of getGenresSorted()">
+          <td *ngIf="oscarsByGenre[genre]">{{ genre }}</td>
+          <td *ngIf="oscarsByGenre[genre]">{{ oscarsByGenre[genre] }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="getOscarsByGenreCount() === 0" class="no-data">No oscars by genre</p>
+  </div>
+
+  <div class="section">
+    <h2>Movies by Decade</h2>
+    <table class="stats-table">
+      <thead>
+        <tr>
+          <th>Decade</th>
+          <th>Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let decade of getDecadesSorted()">
+          <td>{{ decade }}</td>
+          <td>{{ moviesByDecade[decade] }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Movies by Genre</h2>
+    <table class="stats-table">
+      <thead>
+        <tr>
+          <th>Genre</th>
+          <th>Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let genre of getGenresSorted()">
+          <td>{{ genre }}</td>
+          <td>{{ moviesByGenre[genre] }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Actors Without Details</h2>
+    <p>Count: <strong>{{ actorsWithoutDetails }}</strong></p>
+    <div *ngIf="actorsWithoutDetailsList.length > 0" class="details-list">
+      <h3>List of Actors</h3>
+      <ul>
+        <li *ngFor="let actor of actorsWithoutDetailsList">{{ actor.name }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Movies Without Details</h2>
+    <p>Count: <strong>{{ moviesWithoutDetails }}</strong></p>
+    <div *ngIf="moviesWithoutDetailsList.length > 0" class="details-list">
+      <h3>List of Movies</h3>
+      <ul>
+        <li *ngFor="let movie of moviesWithoutDetailsList">{{ movie.title }}</li>
+      </ul>
+    </div>
+  </div>
+</div>

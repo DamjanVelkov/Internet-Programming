@@ -1,0 +1,111 @@
+<div class="matches-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>La Liga Matches</h1>
+      <p>{{ currentSeason?.displayName || '2024/25' }} Season</p>
+    </div>
+    <app-season-selector (seasonChange)="onSeasonChange($event)"></app-season-selector>
+  </div>
+
+  <!-- Round Navigation -->
+  <div class="round-navigation">
+    <button 
+      class="nav-btn" 
+      (click)="previousRound()" 
+      [disabled]="selectedRound <= 1"
+    >
+      <span class="arrow">←</span>
+    </button>
+
+    <div class="round-selector">
+      <select [(ngModel)]="selectedRound" (ngModelChange)="loadMatchesForRound($event)">
+        <option *ngFor="let round of rounds" [ngValue]="round">
+          Matchday {{ round }}
+        </option>
+      </select>
+    </div>
+
+    <button 
+      class="nav-btn" 
+      (click)="nextRound()" 
+      [disabled]="selectedRound >= totalRounds"
+    >
+      <span class="arrow">→</span>
+    </button>
+
+    <button 
+      class="current-round-btn" 
+      (click)="goToCurrentRound()"
+      [disabled]="selectedRound === currentRound"
+      [class.disabled]="selectedRound === currentRound"
+    >
+      Go to Done
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <app-loading-spinner *ngIf="isLoading" message="Loading matches..."></app-loading-spinner>
+
+  <!-- Error -->
+  <div class="error-message" *ngIf="error && !isLoading">
+    <p>{{ error }}</p>
+    <button class="btn-primary" (click)="loadMatchesForRound(selectedRound)">Retry</button>
+  </div>
+
+  <!-- Matches List -->
+  <div class="matches-content" *ngIf="!isLoading && !error">
+    <div class="match-group" *ngFor="let group of matchGroups">
+      <h2 class="round-title">Matchday {{ group.round }}</h2>
+      
+      <div class="matches-list">
+        <div 
+          class="unified-match-card" 
+          *ngFor="let match of group.matches"
+          (click)="onMatchClick(match)"
+          [class.live]="isMatchLive(match)"
+          [class.finished]="isMatchFinished(match)"
+        >
+          <!-- Match Content -->
+          <div class="match-teams">
+            <!-- Home Team -->
+            <div class="team home" (click)="onTeamClick(match.homeTeam.id, $event)">
+              <span class="team-name">{{ match.homeTeam.shortName }}</span>
+              <img 
+                [src]="getTeamImageUrl(match.homeTeam.id)" 
+                [alt]="match.homeTeam.name"
+                class="team-logo"
+                (error)="onImageError($event)"
+              />
+            </div>
+            
+            <!-- Score / Time -->
+            <div class="match-score">
+              <span class="score" *ngIf="isMatchFinished(match) || isMatchLive(match)">{{ match.homeScore.display }} - {{ match.awayScore.display }}</span>
+              <span class="vs" *ngIf="isMatchUpcoming(match)">vs</span>
+              <span class="time" *ngIf="isMatchUpcoming(match)">{{ formatTime(match.startTimestamp) }}</span>
+              <span class="status" *ngIf="isMatchFinished(match) || isMatchLive(match)" [class.finished]="isMatchFinished(match)" [class.live]="isMatchLive(match)">{{ getMatchStatus(match) }}</span>
+              <span class="date">{{ formatDate(match.startTimestamp) }}</span>
+            </div>
+            
+            <!-- Away Team -->
+            <div class="team away" (click)="onTeamClick(match.awayTeam.id, $event)">
+              <img 
+                [src]="getTeamImageUrl(match.awayTeam.id)" 
+                [alt]="match.awayTeam.name"
+                class="team-logo"
+                (error)="onImageError($event)"
+              />
+              <span class="team-name">{{ match.awayTeam.shortName }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="matchGroups.length === 0 || (matchGroups[0] && matchGroups[0].matches.length === 0)">
+      <p>No matches found for this matchday.</p>
+    </div>
+  </div>
+</div>

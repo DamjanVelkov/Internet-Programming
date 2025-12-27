@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+
+        //Sum of Array Elements
+        //Write a function that calculates the sum of all elements in an array of numbers.
+        function sumArray(arr) {
+            return arr.reduce((prev, curr) => prev + curr, 0);
+        }
+        //Demo
+        //console.log(sumArray([1, 2, 3, 4, 5])); //15
+
+
+
+
+
+        //Object Manipulation
+        //Create an object representing a person with properties like name, age, and city. Write a function to update and display these properties.
+        const person = { name: "Ana", age: 28, city: "Skopje" }
+        function updatePerson(p, updates) {
+            Object.assign(p, updates);
+        }
+        function showPerson(p) {
+            return `${p.name}, ${p.age}, ${p.city}`;
+        }
+        //Demo
+        //console.log(showPerson(person)); //Ana, 28, Skopje
+        //updatePerson(person, { age: 29, city: "Ohrid" });
+        //console.log(showPerson(person)); //Ana, 29, Ohrid
+
+
+
+
+
+        //Map Transformation
+        //Given an array of numbers, use the map method to create a new array where each element is doubled.
+        function doubleAll(nums) {
+            return nums.map(n => n * 2);
+        }
+        //Demo
+        //console.log(doubleAll([1, 2, 3, 4])); // [2, 4, 6, 8]
+
+
+
+
+
+        //Filter and Reduce
+        //Given an array of integers, use the filter method to create a new array containing only even numbers. Then, use the reduce method to calculate the sum of these even numbers.
+        function sumOfEvens(nums) {
+            const evens = nums.filter(n => n % 2 === 0);
+            return { evens, sum: evens.reduce((a, b) => a + b, 0) };
+        }
+        //Demo
+        //console.log(sumOfEvens([1, 2, 3, 4, 5, 6])); // { evens: [2,4,6], sum: 12 }
+
+
+
+
+
+        //Map of Names
+        //Create a map where the keys are names, and the values are corresponding ages. Write a function that finds the oldest person in the map.
+        function oldestInMap(nameAgeMap) {
+            let oldestName = null, oldestAge = -Infinity;
+            for (const [name, age] of nameAgeMap.entries()) {
+                if (age > oldestAge) {
+                    oldestAge = age;
+                    oldestName = name;
+                }
+            }
+            return { name: oldestName, age: oldestAge };
+        }
+        //Demo
+        const ages = new Map([
+            ["Elena", 25],
+            ["Marko", 42],
+            ["Teona", 37]
+        ]);
+        console.log(oldestInMap(ages)); //{ name: 'Marko', age: 42 }
+        
+    </script>
+    <title>Document</title>
+</head>
+<body>
+</body>
+</html>

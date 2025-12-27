@@ -1,0 +1,64 @@
+<div class="movie-list-container">
+  <h1>Movie List</h1>
+  
+  <button (click)="navigateToCreate()" class="btn-add">Add New Movie</button>
+
+  <div class="filters-section">
+    <h3>Filters</h3>
+    <div class="filter-row">
+      <div class="filter-group">
+        <label>Title:</label>
+        <input type="text" [(ngModel)]="titleFilter" (ngModelChange)="onFilterChange()" placeholder="Search by title...">
+      </div>
+      <div class="filter-group">
+        <label>Year:</label>
+        <input type="number" [(ngModel)]="yearFilter" (ngModelChange)="onFilterChange()" placeholder="Enter year...">
+      </div>
+      <div class="filter-group">
+        <label>Genre:</label>
+        <select [(ngModel)]="genreFilter" (ngModelChange)="onFilterChange()">
+          <option value="">All Genres</option>
+          <option *ngFor="let genre of genres$ | async" [value]="genre">{{ genre }}</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Rating:</label>
+        <input type="number" [(ngModel)]="ratingFilter" (ngModelChange)="onFilterChange()" placeholder="Minimum rating..." min="0" max="10" step="0.1">
+      </div>
+    </div>
+  </div>
+
+  <table class="movies-table">
+    <thead>
+      <tr>
+        <th (click)="toggleSort('id')">ID <span class="sort-indicator" [class.active]="sortField === 'id'">{{ getSortIndicator('id') }}</span></th>
+        <th (click)="toggleSort('title')">Title <span class="sort-indicator" [class.active]="sortField === 'title'">{{ getSortIndicator('title') }}</span></th>
+        <th (click)="toggleSort('year')">Year <span class="sort-indicator" [class.active]="sortField === 'year'">{{ getSortIndicator('year') }}</span></th>
+        <th (click)="toggleSort('director')">Director <span class="sort-indicator" [class.active]="sortField === 'director'">{{ getSortIndicator('director') }}</span></th>
+        <th (click)="toggleSort('genre')">Genre <span class="sort-indicator" [class.active]="sortField === 'genre'">{{ getSortIndicator('genre') }}</span></th>
+        <th (click)="toggleSort('oscars')">Oscars <span class="sort-indicator" [class.active]="sortField === 'oscars'">{{ getSortIndicator('oscars') }}</span></th>
+        <th (click)="toggleSort('rating')">Rating <span class="sort-indicator" [class.active]="sortField === 'rating'">{{ getSortIndicator('rating') }}</span></th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let movie of filteredMovies">
+        <td>{{ movie.id }}</td>
+        <td>{{ movie.title }}</td>
+        <td>{{ movie.year }}</td>
+        <td>{{ movie.director }}</td>
+        <td>{{ movie.genre.join(' / ') }}</td>
+        <td>{{ getOscarCount(movie) }}</td>
+        <td>{{ movie.rating || 'N/A' }}</td>
+        <td class="actions-cell">
+          <button (click)="viewMovie(movie.id)" class="btn-action btn-view">View</button>
+          <button (click)="editMovie(movie.id)" class="btn-action btn-edit">Edit</button>
+          <button (click)="deleteMovie(movie.id)" class="btn-action btn-delete">Delete</button>
+          <button (click)="addCast(movie.id)" class="btn-action btn-cast">Add Cast</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="filteredMovies.length === 0" class="no-results">No movies found matching your filters.</p>
+</div>

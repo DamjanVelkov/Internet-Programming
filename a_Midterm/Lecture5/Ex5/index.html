@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Exchange Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Currency Exchange Calculator</h1>
+            <p class="subtitle">Get real-time exchange rates for any currency</p>
+        </header>
+        
+        <main class="calculator">
+            <div class="input-group amount-group">
+                <label for="amount">
+                    <i class="fas fa-coins"></i> Amount:
+                </label>
+                <input type="number" id="amount" min="0" step="0.01" value="1">
+            </div>
+
+            <div class="currency-selectors">
+                <div class="input-group currency-group">
+                    <label for="fromCurrency">
+                        <i class="fas fa-arrow-right"></i> From:
+                    </label>
+                    <select id="fromCurrency" class="currency-select"></select>
+                </div>
+
+                <div class="swap-button">
+                    <button id="swapBtn" title="Swap currencies">
+                        <i class="fas fa-exchange-alt"></i>
+                    </button>
+                </div>
+
+                <div class="input-group currency-group">
+                    <label for="toCurrency">
+                        <i class="fas fa-arrow-left"></i> To:
+                    </label>
+                    <select id="toCurrency" class="currency-select"></select>
+                </div>
+            </div>
+
+            <button id="convertBtn">
+                <i class="fas fa-sync-alt"></i> Convert
+            </button>
+
+            <div class="result" id="result">
+                <div class="loading hidden">
+                    <i class="fas fa-spinner fa-spin"></i> Converting...
+                </div>
+                <p>Enter an amount and select currencies to convert</p>
+            </div>
+        </main>
+
+        <footer>
+            <p>Data provided by Frankfurter API</p>
+        </footer>
+    </div>
+    <script src="currencyex.js"></script>
+</body>
+</html>

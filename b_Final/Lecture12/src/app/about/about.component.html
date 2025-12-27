@@ -1,0 +1,69 @@
+<div class="about-container">
+  <h1>About This Application</h1>
+
+  <div class="about-content">
+    <section class="about-section">
+      <h2>Application Overview</h2>
+      <p>
+        This is a comprehensive web application for managing and viewing movie information and details.
+        Users can browse a collection of movies, view detailed information about each film, edit movie data,
+        and explore connections between movies, directors, and actors.
+      </p>
+    </section>
+
+    <section class="about-section" *ngIf="student$ | async as student">
+      <h2>Developer Information</h2>
+      <div class="info-block">
+        <p><strong>Name:</strong> {{ student.name }}</p>
+        <p><strong>ID:</strong> {{ student.id }}</p>
+        <p><strong>Year:</strong> {{ currentYear }}</p>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <h2>Features</h2>
+      <ul class="features-list">
+        <li>View a comprehensive list of movies with filtering and sorting capabilities</li>
+        <li>View detailed information about each movie including cast, genres, and ratings</li>
+        <li>Edit existing movies and add new movies to the database</li>
+        <li>Manage cast members for movies</li>
+        <li>Explore actor profiles with their notable works</li>
+        <li>View statistics about the movie database</li>
+        <li>Advanced filtering by title, year, genre, and rating</li>
+        <li>Sort movies by any column (with visual indicators)</li>
+        <li>Find related movies by genre, director, or shared cast members</li>
+      </ul>
+    </section>
+
+    <section class="about-section">
+      <h2>Technology Stack</h2>
+      <ul class="tech-list">
+        <li>Angular - Frontend framework</li>
+        <li>TypeScript - Programming language</li>
+        <li>RxJS - Reactive programming</li>
+        <li>Bootstrap - Styling (custom CSS)</li>
+      </ul>
+    </section>
+
+    <section class="about-section">
+      <h2>Data Source</h2>
+      <p>
+        This application loads movie data from a JSON file located at <code>assets/db/movie-data.json</code>.
+        All create, update, and delete operations are performed in-memory and will not persist after
+        refreshing the page.
+      </p>
+    </section>
+
+    <section class="about-section">
+      <h2>Navigation</h2>
+      <p>
+        Use the navigation bar at the top to access different sections of the application:
+      </p>
+      <ul class="nav-list">
+        <li><strong>Movies</strong> - View and manage the movie list</li>
+        <li><strong>Statistics</strong> - View analytics about the movie database</li>
+        <li><strong>About</strong> - This page</li>
+      </ul>
+    </section>
+  </div>
+</div>

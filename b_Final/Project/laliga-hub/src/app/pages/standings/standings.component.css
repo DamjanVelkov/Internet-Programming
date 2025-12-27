@@ -1,0 +1,366 @@
+.standings-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.header-content {
+  text-align: left;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 0.5rem;
+}
+
+.page-header p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Error Message */
+.error-message {
+  text-align: center;
+  padding: 3rem;
+}
+
+.error-message p {
+  color: var(--error-color);
+  margin-bottom: 1rem;
+}
+
+/* View Toggle */
+.view-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.view-toggle button {
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-toggle button:hover {
+  background: var(--bg-hover);
+}
+
+.view-toggle button.active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.legend-color.champions-league {
+  background: var(--cl-color, #1e40af);
+}
+
+.legend-color.europa-league {
+  background: var(--el-color, #f97316);
+}
+
+.legend-color.conference-league {
+  background: var(--ecl-color, #22c55e);
+}
+
+.legend-color.relegation {
+  background: var(--relegation-color, #ef4444);
+}
+
+/* Table Container */
+.table-container {
+  overflow-x: auto;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+}
+
+.standings-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.standings-table th {
+  padding: 1rem 0.75rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.standings-table td {
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.standings-table tbody tr {
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.standings-table tbody tr:hover {
+  background: var(--bg-hover);
+}
+
+.standings-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Position Indicators */
+.standings-table tbody tr.champions-league td:first-child {
+  border-left: 4px solid var(--cl-color, #1e40af);
+}
+
+.standings-table tbody tr.europa-league td:first-child {
+  border-left: 4px solid var(--el-color, #f97316);
+}
+
+.standings-table tbody tr.conference-league td:first-child {
+  border-left: 4px solid var(--ecl-color, #22c55e);
+}
+
+.standings-table tbody tr.relegation td:first-child {
+  border-left: 4px solid var(--relegation-color, #ef4444);
+}
+
+/* Column Styles */
+.col-rank {
+  width: 50px;
+  text-align: center !important;
+}
+
+.rank-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-weight: 700;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+}
+
+.champions-league .rank-number {
+  background: var(--cl-color, #1e40af);
+  color: white;
+}
+
+.europa-league .rank-number {
+  background: var(--el-color, #f97316);
+  color: white;
+}
+
+.conference-league .rank-number {
+  background: var(--ecl-color, #22c55e);
+  color: white;
+}
+
+.relegation .rank-number {
+  background: var(--relegation-color, #ef4444);
+  color: white;
+}
+
+.col-team {
+  min-width: 200px;
+}
+
+.team-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.team-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.team-name {
+  font-weight: 500;
+}
+
+.col-played,
+.col-won,
+.col-draw,
+.col-lost,
+.col-gf,
+.col-ga {
+  width: 50px;
+  text-align: center !important;
+}
+
+.col-gd {
+  width: 60px;
+  text-align: center !important;
+  font-weight: 500;
+}
+
+.col-gd.positive {
+  color: var(--success-color);
+}
+
+.col-gd.negative {
+  color: var(--error-color);
+}
+
+.col-points {
+  width: 60px;
+  text-align: center !important;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--primary-color);
+}
+
+.col-form {
+  width: 140px;
+}
+
+.form-badges {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.form-badge {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 4px;
+  color: white;
+}
+
+.form-win {
+  background: var(--success-color);
+}
+
+.form-draw {
+  background: var(--warning-color);
+}
+
+.form-loss {
+  background: var(--error-color);
+}
+
+/* Button */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .standings-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .legend {
+    gap: 1rem;
+    padding: 0.75rem;
+  }
+
+  .legend-item {
+    font-size: 0.75rem;
+  }
+
+  .col-form {
+    display: none;
+  }
+
+  .standings-table th,
+  .standings-table td {
+    padding: 0.65rem 0.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .view-toggle {
+    flex-wrap: wrap;
+  }
+
+  .view-toggle button {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .col-gf,
+  .col-ga {
+    display: none;
+  }
+}

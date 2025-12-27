@@ -1,0 +1,173 @@
+.movie-list-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.btn-add {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.btn-add:hover {
+  background-color: #218838;
+}
+
+.filters-section {
+  background-color: #f5f5f5;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.filters-section h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.filter-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.filter-group input,
+.filter-group select {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.movies-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.movies-table thead {
+  background-color: #f8f9fa;
+}
+
+.movies-table th {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 2px solid #dee2e6;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600;
+  color: #333;
+}
+
+.movies-table th:hover {
+  background-color: #e9ecef;
+}
+
+.movies-table td {
+  padding: 12px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.movies-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.sort-indicator {
+  margin-left: 8px;
+  color: #ccc;
+  font-size: 12px;
+}
+
+.sort-indicator.active {
+  color: #007bff;
+  font-weight: bold;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.btn-action {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.btn-view {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-view:hover {
+  background-color: #0056b3;
+}
+
+.btn-edit {
+  background-color: #ffc107;
+  color: black;
+}
+
+.btn-edit:hover {
+  background-color: #e0a800;
+}
+
+.btn-delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #c82333;
+}
+
+.btn-cast {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.btn-cast:hover {
+  background-color: #138496;
+}
+
+.no-results {
+  text-align: center;
+  color: #999;
+  padding: 20px;
+  font-size: 16px;
+}
+

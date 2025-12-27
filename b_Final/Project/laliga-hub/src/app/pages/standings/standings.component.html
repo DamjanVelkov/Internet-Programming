@@ -1,0 +1,102 @@
+<div class="standings-page">
+  <!-- Page Header with Season Selector -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>La Liga Standings</h1>
+      <p>{{ currentSeason?.displayName || '2024/25' }} Season</p>
+    </div>
+    <app-season-selector 
+      (seasonChange)="onSeasonChange($event)"
+    ></app-season-selector>
+  </div>
+
+  <!-- Loading -->
+  <app-loading-spinner *ngIf="isLoading" message="Loading standings..."></app-loading-spinner>
+
+  <!-- Error -->
+  <div class="error-message" *ngIf="error && !isLoading">
+    <p>{{ error }}</p>
+    <button class="btn-primary" (click)="loadStandings()">Retry</button>
+  </div>
+
+  <!-- Content -->
+  <div class="standings-content" *ngIf="!isLoading && !error">
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-item">
+        <span class="legend-color champions-league"></span>
+        <span>Champions League</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color europa-league"></span>
+        <span>Europa League</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color conference-league"></span>
+        <span>Conference League</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color relegation"></span>
+        <span>Relegation</span>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container">
+      <table class="standings-table">
+        <thead>
+          <tr>
+            <th class="col-rank">#</th>
+            <th class="col-team">Team</th>
+            <th class="col-played">P</th>
+            <th class="col-won">W</th>
+            <th class="col-draw">D</th>
+            <th class="col-lost">L</th>
+            <th class="col-gf">GF</th>
+            <th class="col-ga">GA</th>
+            <th class="col-gd">GD</th>
+            <th class="col-points">Pts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr 
+            *ngFor="let row of standings" 
+            [class]="getPositionClass(row.position)"
+            (click)="onTeamClick(row.team.id)"
+            [title]="getPositionDescription(row.position)"
+          >
+            <td class="col-rank">
+              <span class="rank-number">{{ row.position }}</span>
+            </td>
+            <td class="col-team">
+              <div class="team-cell">
+                <img 
+                  [src]="getTeamImageUrl(row.team.id)" 
+                  [alt]="row.team.name" 
+                  class="team-logo"
+                  (error)="onImageError($event)"
+                />
+                <span class="team-name">{{ row.team.name }}</span>
+              </div>
+            </td>
+            <td class="col-played">{{ row.matches }}</td>
+            <td class="col-won">{{ row.wins }}</td>
+            <td class="col-draw">{{ row.draws }}</td>
+            <td class="col-lost">{{ row.losses }}</td>
+            <td class="col-gf">{{ row.scoresFor }}</td>
+            <td class="col-ga">{{ row.scoresAgainst }}</td>
+            <td class="col-gd" [class.positive]="row.goalDifference > 0" [class.negative]="row.goalDifference < 0">
+              {{ row.goalDifference > 0 ? '+' : '' }}{{ row.goalDifference }}
+            </td>
+            <td class="col-points">{{ row.points }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="standings.length === 0">
+      <p>No standings data available for this season.</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,145 @@
+<div class="favorites-page">
+  <!-- Header -->
+  <div class="page-header">
+    <h1>My Favorites</h1>
+    <p class="subtitle" *ngIf="!isLoading">
+      {{ getTotalFavorites() }} {{ getTotalFavorites() === 1 ? 'item' : 'items' }} saved
+    </p>
+  </div>
+
+  <!-- Loading State -->
+  <app-loading-spinner *ngIf="isLoading" message="Loading your favorites..."></app-loading-spinner>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="error-container">
+    <i class="fa-solid fa-exclamation-circle"></i>
+    <p>{{ error }}</p>
+    <button class="btn btn-primary" (click)="loadFavorites()">
+      <i class="fa-solid fa-refresh"></i>
+      Try Again
+    </button>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!isLoading && !error" class="favorites-content">
+    <!-- Tabs -->
+    <div class="favorites-tabs">
+      <button 
+        class="tab-btn"
+        [class.active]="activeTab === 'teams'"
+        (click)="setTab('teams')">
+        <i class="fa-solid fa-shield"></i>
+        <span>Teams</span>
+        <span class="badge">{{ favoriteTeams.length }}</span>
+      </button>
+      <button 
+        class="tab-btn"
+        [class.active]="activeTab === 'players'"
+        (click)="setTab('players')">
+        <i class="fa-solid fa-user"></i>
+        <span>Players</span>
+        <span class="badge">{{ favoritePlayers.length }}</span>
+      </button>
+    </div>
+
+    <!-- Teams Tab -->
+    <div class="favorites-grid" *ngIf="activeTab === 'teams'">
+      <div 
+        *ngFor="let team of favoriteTeams"
+        class="favorite-card team-card"
+        (click)="onTeamClick(team.id)">
+        <button 
+          class="remove-btn" 
+          (click)="removeTeam(team.id, $event)"
+          title="Remove from favorites">
+          <i class="fa-solid fa-times"></i>
+        </button>
+        <div class="card-content">
+          <img [src]="team.logo" [alt]="team.name" class="team-logo">
+          <h3 class="team-name">{{ team.name }}</h3>
+        </div>
+        <div class="card-footer">
+          <span class="view-link">
+            View Team
+            <i class="fa-solid fa-arrow-right"></i>
+          </span>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="favoriteTeams.length === 0" class="empty-state">
+        <i class="fa-solid fa-shield"></i>
+        <h3>No Favorite Teams</h3>
+        <p>Start adding teams to your favorites by clicking the heart icon on any team page.</p>
+        <a routerLink="/teams" class="btn btn-primary">
+          <i class="fa-solid fa-search"></i>
+          Browse Teams
+        </a>
+      </div>
+    </div>
+
+    <!-- Players Tab -->
+    <div class="favorites-grid" *ngIf="activeTab === 'players'">
+      <div 
+        *ngFor="let player of favoritePlayers"
+        class="favorite-card player-card"
+        (click)="onPlayerClick(player.id)">
+        <button 
+          class="remove-btn" 
+          (click)="removePlayer(player.id, $event)"
+          title="Remove from favorites">
+          <i class="fa-solid fa-times"></i>
+        </button>
+        <div class="card-content">
+          <div class="player-photo">
+            <img 
+              [src]="player.photo" 
+              [alt]="player.name">
+          </div>
+          <h3 class="player-name">{{ player.name }}</h3>
+          <div class="player-meta" *ngIf="player.teamName">
+            <span>{{ player.teamName }}</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="view-link">
+            View Player
+            <i class="fa-solid fa-arrow-right"></i>
+          </span>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="favoritePlayers.length === 0" class="empty-state">
+        <i class="fa-solid fa-user"></i>
+        <h3>No Favorite Players</h3>
+        <p>Start adding players to your favorites by clicking the heart icon on any player page.</p>
+        <a routerLink="/stats" class="btn btn-primary">
+          <i class="fa-solid fa-chart-bar"></i>
+          Browse Stats
+        </a>
+      </div>
+    </div>
+
+    <!-- All Empty State -->
+    <div *ngIf="getTotalFavorites() === 0 && activeTab === 'teams'" class="all-empty-state">
+      <div class="empty-icon">
+        <i class="fa-solid fa-heart"></i>
+      </div>
+      <h2>Your favorites list is empty</h2>
+      <p>
+        Explore La Liga teams and players, then click the heart icon to save your favorites here.
+      </p>
+      <div class="empty-actions">
+        <a routerLink="/teams" class="btn btn-primary">
+          <i class="fa-solid fa-shield"></i>
+          Browse Teams
+        </a>
+        <a routerLink="/stats" class="btn btn-outline">
+          <i class="fa-solid fa-chart-bar"></i>
+          View Stats
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

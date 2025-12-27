@@ -1,0 +1,72 @@
+<div class="teams-page">
+  <div class="page-header">
+    <div class="header-content">
+      <h1>La Liga Teams</h1>
+      <p>All 20 teams competing in {{ currentSeason?.displayName || 'La Liga' }}</p>
+    </div>
+    <app-season-selector 
+      (seasonChange)="onSeasonChange($event)">
+    </app-season-selector>
+  </div>
+
+  <!-- Loading -->
+  <app-loading-spinner *ngIf="isLoading" message="Loading teams..."></app-loading-spinner>
+
+  <!-- Error -->
+  <div class="error-message" *ngIf="error && !isLoading">
+    <p>{{ error }}</p>
+    <button class="btn-primary" (click)="loadTeams()">Retry</button>
+  </div>
+
+  <!-- Content -->
+  <div class="teams-content" *ngIf="!isLoading && !error">
+    <!-- Controls -->
+    <div class="controls">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input 
+          type="text" 
+          placeholder="Search teams..."
+          [(ngModel)]="searchQuery"
+          (input)="onSearch()"
+        />
+      </div>
+    </div>
+
+    <!-- Teams Grid -->
+    <div class="teams-grid">
+      <div 
+        *ngFor="let team of filteredTeams" 
+        class="team-card"
+        (click)="onTeamClick(team.id)"
+      >
+        <button 
+          class="favorite-btn" 
+          [class.active]="isFavorite(team.id)"
+          (click)="toggleFavorite($event, team)"
+          [title]="isFavorite(team.id) ? 'Remove from favorites' : 'Add to favorites'"
+        >
+          <svg viewBox="0 0 24 24" [attr.fill]="isFavorite(team.id) ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </button>
+
+        <div class="team-logo-container">
+          <img [src]="team.logo" [alt]="team.name" class="team-logo" />
+        </div>
+        
+        <div class="team-info">
+          <h3 class="team-name">{{ team.name }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Results -->
+    <div class="no-results" *ngIf="filteredTeams.length === 0">
+      <p>No teams found matching "{{ searchQuery }}"</p>
+    </div>
+  </div>
+</div>

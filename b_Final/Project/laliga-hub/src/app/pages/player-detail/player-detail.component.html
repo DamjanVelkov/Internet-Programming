@@ -1,0 +1,84 @@
+<div class="player-detail-page">
+  <!-- Loading -->
+  <app-loading-spinner *ngIf="isLoading" message="Loading player details..."></app-loading-spinner>
+
+  <!-- Error -->
+  <div class="error-container" *ngIf="error && !isLoading">
+    <div class="error-icon">⚠️</div>
+    <p>{{ error }}</p>
+    <button class="btn-primary" (click)="goBack()">Go Back</button>
+  </div>
+
+  <!-- Content -->
+  <div class="player-content" *ngIf="!isLoading && !error && player">
+    <!-- Back Button -->
+    <button class="back-button" (click)="goBack()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      Back
+    </button>
+
+    <!-- Player Header -->
+    <div class="player-header">
+      <!-- Favorite Button - Top Right Heart Only -->
+      <button class="favorite-btn-heart" [class.active]="isFavorite" (click)="toggleFavorite()" title="{{ isFavorite ? 'Remove from Favorites' : 'Add to Favorites' }}">
+        <svg viewBox="0 0 24 24" [attr.fill]="isFavorite ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </button>
+
+      <div class="player-photo-container">
+        <img [src]="getPlayerImageUrl(player.id)" [alt]="player.name" class="player-photo"
+             onerror="this.src='https://www.sofascore.com/static/images/placeholders/player.svg'">
+      </div>
+      
+      <div class="player-main-info">
+        <h1 class="player-name">{{ player.name }}</h1>
+        
+        <div class="player-details-grid">
+          <div class="detail-item" *ngIf="player.position">
+            <span class="detail-label">Position</span>
+            <span class="detail-value">{{ player.position }}</span>
+          </div>
+          
+          <div class="detail-item" *ngIf="player.jerseyNumber">
+            <span class="detail-label">Number</span>
+            <span class="detail-value">{{ player.jerseyNumber }}</span>
+          </div>
+          
+          <div class="detail-item" *ngIf="player.country?.name">
+            <span class="detail-label">Nationality</span>
+            <span class="detail-value">{{ player.country?.name }}</span>
+          </div>
+          
+          <div class="detail-item" *ngIf="getAge()">
+            <span class="detail-label">Age</span>
+            <span class="detail-value">{{ getAge() }}</span>
+          </div>
+          
+          <div class="detail-item" *ngIf="player.height">
+            <span class="detail-label">Height</span>
+            <span class="detail-value">{{ player.height }} cm</span>
+          </div>
+          
+          <div class="detail-item" *ngIf="player.dateOfBirthTimestamp">
+            <span class="detail-label">Date of Birth</span>
+            <span class="detail-value">{{ getBirthDate() }}</span>
+          </div>
+        </div>
+        
+        <!-- Team Badge -->
+        <div class="team-badge" *ngIf="player.team" 
+             [class.disabled]="!isLaLigaTeam" 
+             (click)="onTeamClick()"
+             [title]="isLaLigaTeam ? 'View team' : 'Not a LaLiga team'">
+          <img [src]="getTeamImageUrl(player.team.id)" [alt]="player.team.name" class="team-logo">
+          <span class="team-name">{{ player.team.name }}</span>
+          <span class="not-laliga-badge" *ngIf="!isLaLigaTeam">Not in LaLiga</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

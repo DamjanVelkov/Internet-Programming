@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Document</title>
+</head>
+<body>
+    <script>
+
+        //Pig Latin
+        //Create a function that takes a string of words and moves the first letter
+        //of each word to the end of it, then adds 'ay' to the end of the word.
+        //This is a basic form of "Pig Latin." Move the first letter of each word
+        //to the end of the word. Add "ay" to the end of the word. Words starting
+        //with a vowel (A, E, I, O, U) append "way" to the end instead.
+        //Extra Practice: Preserve proper capitalization as in the examples below.
+        function pigLatin(str) {
+            // Split the string into words
+            let words = str.split(' ');
+            
+            // Process each word
+            let result = words.map(word => {
+                // Handle empty words
+                if (word.length === 0) return word;
+                
+                // Check for punctuation at the end
+                let punctuation = '';
+                let lastChar = word[word.length - 1];
+                if (!lastChar.match(/[a-zA-Z]/)) {
+                    punctuation = lastChar;
+                    word = word.slice(0, -1);
+                }
+                
+                // Check if word starts with vowel
+                let firstChar = word[0].toLowerCase();
+                let isVowel = 'aeiou'.includes(firstChar);
+                
+                let result;
+                if (isVowel) {
+                    result = word + 'way';
+                } else {
+                    // Move first letter to end and add 'ay'
+                    result = word.slice(1) + word[0].toLowerCase() + 'ay';
+                }
+                
+                // Preserve capitalization
+                if (word[0] === word[0].toUpperCase()) {
+                    result = result[0].toUpperCase() + result.slice(1);
+                }
+                
+                return result + punctuation;
+            });
+            
+            // Join the words back together
+            return result.join(' ');
+        }
+        //Demo
+        console.log(pigLatin("Cats are great pets.")); // "Atscay areway reatgay etspay."
+        console.log(pigLatin("Tom got a small piece of pie.")); // "Omtay otgay away allsmay iecepay ofway iepay."
+        console.log(pigLatin("He told us a very exciting tale.")); // "Ehay oldtay usway away eryvay excitingway aletay."
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<div class="team-detail-page">
+  <!-- Loading -->
+  <div class="loading-container" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading team details...</p>
+  </div>
+
+  <!-- Error -->
+  <div class="error-container" *ngIf="error && !loading">
+    <p>{{ error }}</p>
+    <button class="btn-primary" (click)="goBack()">Go Back</button>
+  </div>
+
+  <!-- Content -->
+  <div class="team-content" *ngIf="!loading && !error && team">
+    <!-- Back Button -->
+    <button class="back-button" (click)="goBack()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      Back
+    </button>
+
+    <!-- Team Header - Improved Layout -->
+    <div class="team-header">
+      <!-- Favorite Button - Top Right Heart Only -->
+      <button class="favorite-btn-heart" [class.active]="isFavorite" (click)="toggleFavorite()" title="{{ isFavorite ? 'Remove from Favorites' : 'Add to Favorites' }}">
+        <svg viewBox="0 0 24 24" [attr.fill]="isFavorite ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </button>
+
+      <div class="team-logo-container">
+        <img [src]="getTeamLogo(team.id)" [alt]="team.name" class="team-logo" />
+      </div>
+      
+      <div class="team-info">
+        <h1 class="team-name">{{ team.name }}</h1>
+        <span class="season-badge" *ngIf="seasonDisplay">{{ seasonDisplay }}</span>
+        
+        <div class="team-details">
+          <div class="detail-row" *ngIf="teamPosition">
+            <span class="detail-icon">🏆</span>
+            <span class="detail-text"><strong>#{{ teamPosition }}</strong> in La Liga</span>
+          </div>
+          <div class="detail-row" *ngIf="team.manager">
+            <span class="detail-icon">👔</span>
+            <span class="detail-text">{{ team.manager }}</span>
+          </div>
+          <div class="detail-row" *ngIf="team.stadium">
+            <span class="detail-icon">🏟️</span>
+            <span class="detail-text">{{ team.stadium }}</span>
+          </div>
+          <div class="detail-row" *ngIf="team.founded">
+            <span class="detail-icon">📅</span>
+            <span class="detail-text">Founded {{ team.founded }}</span>
+          </div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="team-stats" *ngIf="teamStats">
+          <div class="stat-item">
+            <span class="stat-value">{{ teamStats.matches }}</span>
+            <span class="stat-label">Played</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ teamStats.wins }}</span>
+            <span class="stat-label">Won</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ teamStats.draws }}</span>
+            <span class="stat-label">Drawn</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ teamStats.losses }}</span>
+            <span class="stat-label">Lost</span>
+          </div>
+          <div class="stat-item highlight">
+            <span class="stat-value">{{ teamStats.points }}</span>
+            <span class="stat-label">Points</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Squad Section -->
+    <div class="section" *ngIf="players.length > 0">
+      <h2>Squad <span class="historical-label">(Shows only Current Season)</span></h2>
+      <div class="players-grid">
+        <div 
+          *ngFor="let player of players" 
+          class="player-card"
+          (click)="viewPlayer(player.id)"
+        >
+          <img [src]="getPlayerImage(player.id)" [alt]="player.name" class="player-photo"
+               onerror="this.src='https://www.sofascore.com/static/images/placeholders/player.svg'" />
+          <div class="player-info">
+            <span class="player-number" *ngIf="player.jerseyNumber">{{ player.jerseyNumber }}</span>
+            <span class="player-name">{{ player.name }}</span>
+            <span class="player-position">{{ player.position }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No squad data message -->
+    <div class="no-data" *ngIf="players.length === 0">
+      <p>No squad information available for this team.</p>
+    </div>
+
+    <!-- Matches Section -->
+    <div class="section matches-section" *ngIf="matches.length > 0">
+      <h2>Season Matches</h2>
+      <div class="matches-list">
+        <div 
+          *ngFor="let match of matches" 
+          class="match-row"
+          [class.finished]="isMatchFinished(match)"
+          (click)="viewMatch(match.id)"
+        >
+          <span class="match-round">R{{ match.round }}</span>
+          <div class="match-teams-compact">
+            <div class="team-side home" [class.winner]="isMatchFinished(match) && match.homeScore.current > match.awayScore.current">
+              <span class="team-abbr">{{ match.homeTeam.shortName || match.homeTeam.name }}</span>
+              <img [src]="getTeamLogo(match.homeTeam.id)" [alt]="match.homeTeam.name" class="mini-logo">
+            </div>
+            <div class="match-center">
+              <span class="match-status" *ngIf="isMatchFinished(match)">FT</span>
+              <div class="match-score-compact" *ngIf="isMatchFinished(match)">
+                {{ match.homeScore.current }} - {{ match.awayScore.current }}
+              </div>
+              <span class="match-vs" *ngIf="!isMatchFinished(match)">vs</span>
+              <span class="match-time" *ngIf="!isMatchFinished(match)">{{ getMatchTime(match) }}</span>
+              <span class="match-date">{{ getMatchDate(match) }}</span>
+            </div>
+            <div class="team-side away" [class.winner]="isMatchFinished(match) && match.awayScore.current > match.homeScore.current">
+              <img [src]="getTeamLogo(match.awayTeam.id)" [alt]="match.awayTeam.name" class="mini-logo">
+              <span class="team-abbr">{{ match.awayTeam.shortName || match.awayTeam.name }}</span>
+            </div>
+          </div>
+          <span class="match-result" 
+                [class.win]="getMatchResult(match) === 'W'" 
+                [class.draw]="getMatchResult(match) === 'D'" 
+                [class.loss]="getMatchResult(match) === 'L'"
+                *ngIf="isMatchFinished(match)">
+            {{ getMatchResult(match) }}
+          </span>
+          <span class="match-result placeholder" *ngIf="!isMatchFinished(match)"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

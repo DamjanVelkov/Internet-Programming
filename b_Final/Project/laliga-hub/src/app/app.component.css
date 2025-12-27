@@ -1,0 +1,20 @@
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-primary);
+  transition: background-color var(--transition-normal);
+}
+
+.main-content {
+  flex: 1;
+  min-height: calc(100vh - 140px);
+}
+
+/* Theme transition */
+.app-container,
+.app-container * {
+  transition: background-color var(--transition-normal), 
+              color var(--transition-normal),
+              border-color var(--transition-normal);
+}

@@ -1,0 +1,41 @@
+<div class="actor-details-container" *ngIf="actor$ | async as actor">
+  <button (click)="goBack()" class="btn-back">← Back to Movies</button>
+
+  <div class="actor-content">
+    <h1>{{ actor.name }}</h1>
+
+    <div class="details-grid">
+      <div class="detail-item">
+        <label>ID:</label>
+        <span>{{ actor.id }}</span>
+      </div>
+      <div class="detail-item" *ngIf="actor.birthdate">
+        <label>Birthdate:</label>
+        <span>{{ actor.birthdate }}</span>
+      </div>
+      <div class="detail-item" *ngIf="actor.height">
+        <label>Height:</label>
+        <span>{{ actor.height }} cm</span>
+      </div>
+      <div class="detail-item" *ngIf="actor.nationality">
+        <label>Nationality:</label>
+        <span>{{ actor.nationality }}</span>
+      </div>
+    </div>
+
+    <div class="detail-section" *ngIf="notableMovies.length > 0">
+      <label>Notable Works:</label>
+      <ul class="movies-list">
+        <li *ngFor="let movie of notableMovies">
+          <a (click)="viewMovie(movie.id)" class="movie-link">{{ movie.title }}</a>
+        </li>
+      </ul>
+    </div>
+
+    <p *ngIf="notableMovies.length === 0" class="no-data">No notable works listed.</p>
+  </div>
+</div>
+
+<div *ngIf="!(actor$ | async)" class="loading">
+  Loading actor details...
+</div>

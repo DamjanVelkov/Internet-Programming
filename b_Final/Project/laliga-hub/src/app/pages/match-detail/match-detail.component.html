@@ -1,0 +1,295 @@
+<div class="match-detail-page">
+  <!-- Loading -->
+  <app-loading-spinner *ngIf="isLoading" message="Loading match details..."></app-loading-spinner>
+
+  <!-- Error -->
+  <div class="error-container" *ngIf="error && !isLoading">
+    <div class="error-icon">⚠️</div>
+    <p>{{ error }}</p>
+    <button class="btn-primary" (click)="goBack()">Go Back</button>
+  </div>
+
+  <!-- Content -->
+  <div class="match-content" *ngIf="!isLoading && !error && match">
+    <!-- Back Button -->
+    <button class="back-button" (click)="goBack()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      Back
+    </button>
+
+    <!-- Match Card -->
+    <div class="match-card">
+      <div class="match-header">
+        <span class="match-round">Matchday {{ match.round }}</span>
+        <span class="match-date">{{ formatDate() }}</span>
+        <span class="match-status" [class.live]="match.status.type === 'inprogress'">{{ getMatchStatus() }}</span>
+      </div>
+
+      <div class="match-teams">
+        <!-- Home Team -->
+        <div class="team home" (click)="onTeamClick(match.homeTeam.id)">
+          <img [src]="getTeamImageUrl(match.homeTeam.id)" [alt]="match.homeTeam.name" class="team-logo">
+          <span class="team-name">{{ match.homeTeam.name }}</span>
+        </div>
+
+        <!-- Score -->
+        <div class="score-container">
+          <div class="score" *ngIf="isFinished()">
+            <span class="score-home">{{ match.homeScore.current }}</span>
+            <span class="score-separator">-</span>
+            <span class="score-away">{{ match.awayScore.current }}</span>
+          </div>
+          <div class="time" *ngIf="!isFinished()">
+            <span class="kickoff-time">{{ formatTime() }}</span>
+          </div>
+        </div>
+
+        <!-- Away Team -->
+        <div class="team away" (click)="onTeamClick(match.awayTeam.id)">
+          <img [src]="getTeamImageUrl(match.awayTeam.id)" [alt]="match.awayTeam.name" class="team-logo">
+          <span class="team-name">{{ match.awayTeam.name }}</span>
+        </div>
+      </div>
+
+      <!-- Goal Scorers -->
+      <div class="goal-scorers" *ngIf="getGoals().length > 0">
+        <div class="scorers-home">
+          <div class="goal-item" *ngFor="let goal of getHomeGoals()">
+            <span class="goal-player" (click)="onPlayerClick(goal.player?.id || 0); $event.stopPropagation()">
+              {{ goal.player?.name }}
+              <span class="penalty" *ngIf="goal.isPenalty">(P)</span>
+              <span class="own-goal" *ngIf="goal.isOwnGoal">(OG)</span>
+            </span>
+            <span class="goal-assist" *ngIf="goal.assist">({{ goal.assist.shortName }})</span>
+            <span class="goal-time">{{ formatEventTime(goal) }}</span>
+          </div>
+        </div>
+        <div class="scorers-away">
+          <div class="goal-item" *ngFor="let goal of getAwayGoals()">
+            <span class="goal-time">{{ formatEventTime(goal) }}</span>
+            <span class="goal-assist" *ngIf="goal.assist">({{ goal.assist.shortName }})</span>
+            <span class="goal-player" (click)="onPlayerClick(goal.player?.id || 0); $event.stopPropagation()">
+              {{ goal.player?.name }}
+              <span class="penalty" *ngIf="goal.isPenalty">(P)</span>
+              <span class="own-goal" *ngIf="goal.isOwnGoal">(OG)</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab" [class.active]="activeTab === 'summary'" (click)="setTab('summary')">Timeline</button>
+      <button class="tab" [class.active]="activeTab === 'lineups'" (click)="setTab('lineups')">Lineups</button>
+      <button class="tab" [class.active]="activeTab === 'stats'" (click)="setTab('stats')">Statistics</button>
+    </div>
+
+    <!-- Timeline Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'summary'">
+      <!-- Match Events Timeline -->
+      <div class="events-section" *ngIf="incidents.length > 0">
+        <h3>Match Events</h3>
+        <div class="events-timeline">
+          <div class="event-item" *ngFor="let event of incidents" [class.home]="event.team === 'home'" [class.away]="event.team === 'away'">
+            <div class="event-time">{{ formatEventTime(event) }}</div>
+            <div class="event-icon">
+              <span *ngIf="event.type === 'goal'">⚽</span>
+              <span *ngIf="event.type === 'card' && event.cardType === 'yellow'" class="yellow-card">🟨</span>
+              <span *ngIf="event.type === 'card' && event.cardType === 'red'" class="red-card">🟥</span>
+              <span *ngIf="event.type === 'card' && event.cardType === 'yellowred'" class="red-card">🟨🟥</span>
+              <span *ngIf="event.type === 'substitution'">🔄</span>
+            </div>
+            <div class="event-details">
+              <!-- Goal -->
+              <ng-container *ngIf="event.type === 'goal'">
+                <span class="player-name clickable" (click)="onPlayerClick(event.player?.id || 0)">{{ event.player?.name }}</span>
+                <span class="goal-type" *ngIf="event.isOwnGoal">(Own Goal)</span>
+                <span class="assist" *ngIf="event.assist"> - Assist: {{ event.assist.name }}</span>
+              </ng-container>
+              <!-- Card -->
+              <ng-container *ngIf="event.type === 'card'">
+                <span class="player-name clickable" (click)="onPlayerClick(event.player?.id || 0)">{{ event.player?.name }}</span>
+              </ng-container>
+              <!-- Substitution -->
+              <ng-container *ngIf="event.type === 'substitution'">
+                <span class="sub-in clickable" (click)="onPlayerClick(event.playerIn?.id || 0)">↑ {{ event.playerIn?.name }}</span>
+                <span class="sub-out clickable" (click)="onPlayerClick(event.playerOut?.id || 0)">↓ {{ event.playerOut?.name }}</span>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- No Events (match finished but no events recorded) -->
+      <div class="no-data" *ngIf="incidents.length === 0 && isFinished()">
+        <p>No match events available</p>
+      </div>
+
+      <!-- Upcoming/Not Started Match -->
+      <div class="no-data" *ngIf="incidents.length === 0 && !isFinished()">
+        <p>Timeline not available for this match</p>
+      </div>
+    </div>
+
+    <!-- Lineups Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'lineups'">
+      <div class="lineups-container" *ngIf="lineups">
+        <!-- Coach Section -->
+        <div class="lineup-section" *ngIf="homeCoach || awayCoach">
+          <h4>Coach</h4>
+          <div class="lineup-grid">
+            <div class="lineup-team home">
+              <div class="lineup-player coach" *ngIf="homeCoach">
+                <span class="player-number">C</span>
+                <span class="player-name">{{ homeCoach }}</span>
+              </div>
+            </div>
+            <div class="lineup-team away">
+              <div class="lineup-player coach" *ngIf="awayCoach">
+                <span class="player-number">C</span>
+                <span class="player-name">{{ awayCoach }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Starting XI List -->
+        <div class="lineup-section">
+          <h4>Starting XI</h4>
+          <div class="lineup-grid">
+            <div class="lineup-team home">
+              <div class="lineup-player" *ngFor="let player of lineups.home.players" (click)="onPlayerClick(player.id)">
+                <span class="player-number">{{ player.jerseyNumber }}</span>
+                <span class="player-name">{{ player.name }}</span>
+                <span class="player-rating" *ngIf="player.rating">{{ player.rating }}</span>
+              </div>
+            </div>
+            <div class="lineup-team away">
+              <div class="lineup-player" *ngFor="let player of lineups.away.players" (click)="onPlayerClick(player.id)">
+                <span class="player-number">{{ player.jerseyNumber }}</span>
+                <span class="player-name">{{ player.name }}</span>
+                <span class="player-rating" *ngIf="player.rating">{{ player.rating }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Substitutes Subsection -->
+          <div class="substitutes-subsection" *ngIf="lineups.home.substitutes.length > 0 || lineups.away.substitutes.length > 0">
+            <h4 class="subs-header">Substitutes</h4>
+            <div class="lineup-grid">
+              <div class="lineup-team home">
+                <div class="lineup-player sub" *ngFor="let player of getSortedSubstitutes('home')" (click)="onPlayerClick(player.id)" [class.used]="isSubUsed(player.id, 'home')">
+                  <span class="player-number">{{ player.jerseyNumber }}</span>
+                  <span class="player-name">{{ player.name }}</span>
+                  <span class="sub-minute" *ngIf="isSubUsed(player.id, 'home')">{{ getSubMinute(player.id, 'home') }}</span>
+                  <span class="player-rating" *ngIf="player.rating">{{ player.rating }}</span>
+                </div>
+              </div>
+              <div class="lineup-team away">
+                <div class="lineup-player sub" *ngFor="let player of getSortedSubstitutes('away')" (click)="onPlayerClick(player.id)" [class.used]="isSubUsed(player.id, 'away')">
+                  <span class="player-number">{{ player.jerseyNumber }}</span>
+                  <span class="player-name">{{ player.name }}</span>
+                  <span class="sub-minute" *ngIf="isSubUsed(player.id, 'away')">{{ getSubMinute(player.id, 'away') }}</span>
+                  <span class="player-rating" *ngIf="player.rating">{{ player.rating }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- No Lineups -->
+      <div class="no-data" *ngIf="!lineups">
+        <p>Lineup information not available</p>
+      </div>
+    </div>
+
+    <!-- Statistics Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'stats'">
+      <div class="statistics-container" *ngIf="statistics">
+        <!-- Possession -->
+        <div class="stat-row possession" *ngIf="statistics.possession.home > 0 || statistics.possession.away > 0">
+          <span class="stat-home">{{ statistics.possession.home }}%</span>
+          <div class="stat-info">
+            <span class="stat-label">Possession</span>
+            <div class="stat-bar-container">
+              <div class="stat-bar home" [style.width.%]="statistics.possession.home"></div>
+              <div class="stat-bar away" [style.width.%]="statistics.possession.away"></div>
+            </div>
+          </div>
+          <span class="stat-away">{{ statistics.possession.away }}%</span>
+        </div>
+
+        <!-- Other Stats -->
+        <div class="stat-row" *ngIf="statistics.shots.home > 0 || statistics.shots.away > 0">
+          <span class="stat-home">{{ statistics.shots.home }}</span>
+          <span class="stat-label">Total Shots</span>
+          <span class="stat-away">{{ statistics.shots.away }}</span>
+        </div>
+
+        <div class="stat-row" *ngIf="statistics.shotsOnTarget.home > 0 || statistics.shotsOnTarget.away > 0">
+          <span class="stat-home">{{ statistics.shotsOnTarget.home }}</span>
+          <span class="stat-label">Shots on Target</span>
+          <span class="stat-away">{{ statistics.shotsOnTarget.away }}</span>
+        </div>
+
+        <div class="stat-row" *ngIf="getGoals().length > 0">
+          <span class="stat-home">{{ getHomeGoals().length }}</span>
+          <span class="stat-label">Goals</span>
+          <span class="stat-away">{{ getAwayGoals().length }}</span>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-home">{{ statistics.corners.home }}</span>
+          <span class="stat-label">Corners</span>
+          <span class="stat-away">{{ statistics.corners.away }}</span>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-home">{{ statistics.fouls.home }}</span>
+          <span class="stat-label">Fouls</span>
+          <span class="stat-away">{{ statistics.fouls.away }}</span>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-home">{{ statistics.offsides.home }}</span>
+          <span class="stat-label">Offsides</span>
+          <span class="stat-away">{{ statistics.offsides.away }}</span>
+        </div>
+
+        <div class="stat-row" *ngIf="statistics.yellowCards.home > 0 || statistics.yellowCards.away > 0">
+          <span class="stat-home">{{ statistics.yellowCards.home }}</span>
+          <span class="stat-label">Yellow Cards</span>
+          <span class="stat-away">{{ statistics.yellowCards.away }}</span>
+        </div>
+
+        <div class="stat-row" *ngIf="statistics.redCards.home > 0 || statistics.redCards.away > 0">
+          <span class="stat-home">{{ statistics.redCards.home }}</span>
+          <span class="stat-label">Red Cards</span>
+          <span class="stat-away">{{ statistics.redCards.away }}</span>
+        </div>
+
+        <div class="stat-row" *ngIf="statistics.passes.home > 0 || statistics.passes.away > 0">
+          <span class="stat-home">{{ statistics.passes.home }}</span>
+          <span class="stat-label">Passes</span>
+          <span class="stat-away">{{ statistics.passes.away }}</span>
+        </div>
+
+        <div class="stat-row" *ngIf="statistics.passAccuracy.home > 0 || statistics.passAccuracy.away > 0">
+          <span class="stat-home">{{ statistics.passAccuracy.home }}%</span>
+          <span class="stat-label">Pass Accuracy</span>
+          <span class="stat-away">{{ statistics.passAccuracy.away }}%</span>
+        </div>
+      </div>
+
+      <!-- No Stats -->
+      <div class="no-data" *ngIf="!statistics">
+        <p>Statistics not available for this match</p>
+      </div>
+    </div>
+  </div>
+</div>

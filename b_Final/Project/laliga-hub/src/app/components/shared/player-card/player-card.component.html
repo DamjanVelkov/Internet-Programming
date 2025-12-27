@@ -1,0 +1,33 @@
+<div 
+  class="player-card" 
+  [class]="'size-' + size" 
+  [class.clickable]="clickable"
+  (click)="onClick()"
+>
+  <div class="player-photo-container">
+    <img 
+      [src]="playerPhoto" 
+      [alt]="playerName"
+      class="player-photo"
+      loading="lazy"
+      (error)="player.photo = 'assets/player-placeholder.png'"
+    />
+    <span class="jersey-number" *ngIf="jerseyNumber">{{ jerseyNumber }}</span>
+  </div>
+  
+  <div class="player-info">
+    <h4 class="player-name">{{ playerName }}</h4>
+    <span class="player-position" *ngIf="position">{{ position }}</span>
+    
+    <div class="player-stats" *ngIf="showStats && stats">
+      <div class="stat" *ngIf="goals > 0">
+        <span class="stat-value">{{ goals }}</span>
+        <span class="stat-label">Goals</span>
+      </div>
+      <div class="stat" *ngIf="assists > 0">
+        <span class="stat-value">{{ assists }}</span>
+        <span class="stat-label">Assists</span>
+      </div>
+    </div>
+  </div>
+</div>

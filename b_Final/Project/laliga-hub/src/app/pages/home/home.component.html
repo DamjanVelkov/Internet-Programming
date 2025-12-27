@@ -1,0 +1,177 @@
+<div class="home-page">
+  <!-- Season Selector -->
+  <div class="season-bar">
+    <app-season-selector 
+      (seasonChange)="onSeasonChange($event)"
+    ></app-season-selector>
+  </div>
+
+  <!-- Loading State -->
+  <app-loading-spinner *ngIf="isLoading" message="Loading LaLiga data..."></app-loading-spinner>
+
+  <!-- Error State -->
+  <div class="error-container" *ngIf="error && !isLoading">
+    <div class="error-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <h3>Oops! Something went wrong</h3>
+      <p>{{ error }}</p>
+      <button class="btn-primary" (click)="refresh()">Try Again</button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="home-content" *ngIf="!isLoading && !error">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Welcome to <span class="accent">My</span>Liga</h1>
+        <p>Your ultimate destination for La Liga football statistics,<br>standings, and match information</p>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <span class="stat-value">20</span>
+            <span class="stat-label">Teams</span>
+          </div>
+          <div class="hero-stat">
+            <span class="stat-value">{{ finishedMatchesCount || 380 }}</span>
+            <span class="stat-label">Matches</span>
+          </div>
+          <div class="hero-stat">
+            <span class="stat-value">{{ currentRound }}</span>
+            <span class="stat-label">Current Round</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="main-grid">
+      <!-- Recent Matches Column -->
+      <div class="matches-column">
+        <div class="section-header">
+          <h2>{{ getMatchesSectionTitle() }}</h2>
+          <a routerLink="/matches" class="view-all">View All →</a>
+        </div>
+
+        <div class="match-groups">
+          <div class="match-group" *ngFor="let group of matchGroups">
+            <div class="group-header">
+              <span class="group-date">{{ group.date }}</span>
+              <span class="group-round">{{ group.round }}</span>
+            </div>
+            <div class="group-matches">
+              <div class="unified-match-card compact" *ngFor="let match of group.matches" (click)="onMatchClick(match.id)">
+                <div class="match-teams">
+                  <div class="team home" (click)="onTeamClick(match.homeTeam.id); $event.stopPropagation()">
+                    <span class="team-name">{{ match.homeTeam.shortName || match.homeTeam.name }}</span>
+                    <img [src]="getTeamImageUrl(match.homeTeam.id)" [alt]="match.homeTeam.name" class="team-logo" />
+                  </div>
+                  <div class="match-score">
+                    <span class="status ft" *ngIf="isMatchFinished(match)">FT</span>
+                    <span class="score" *ngIf="isMatchFinished(match)">{{ match.homeScore.current }} - {{ match.awayScore.current }}</span>
+                    <span class="time" *ngIf="!isMatchFinished(match)">{{ getMatchTime(match) }}</span>
+                    <span class="status" *ngIf="!isMatchFinished(match)">{{ getMatchStatus(match) }}</span>
+                  </div>
+                  <div class="team away" (click)="onTeamClick(match.awayTeam.id); $event.stopPropagation()">
+                    <img [src]="getTeamImageUrl(match.awayTeam.id)" [alt]="match.awayTeam.name" class="team-logo" />
+                    <span class="team-name">{{ match.awayTeam.shortName || match.awayTeam.name }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming Matches -->
+        <div class="upcoming-section" *ngIf="upcomingMatches.length > 0">
+          <div class="section-header">
+            <h3>Upcoming Matches</h3>
+          </div>
+          <div class="upcoming-matches">
+            <div class="unified-match-card compact upcoming" *ngFor="let match of upcomingMatches" (click)="onMatchClick(match.id)">
+              <div class="match-teams">
+                <div class="team home" (click)="onTeamClick(match.homeTeam.id); $event.stopPropagation()">
+                  <span class="team-name">{{ match.homeTeam.shortName || match.homeTeam.name }}</span>
+                  <img [src]="getTeamImageUrl(match.homeTeam.id)" [alt]="match.homeTeam.name" class="team-logo" />
+                </div>
+                <div class="match-center">
+                  <span class="vs">vs</span>
+                  <span class="match-time">{{ getMatchTime(match) }}</span>
+                  <span class="match-date">{{ formatMatchDate(match) }}</span>
+                </div>
+                <div class="team away" (click)="onTeamClick(match.awayTeam.id); $event.stopPropagation()">
+                  <img [src]="getTeamImageUrl(match.awayTeam.id)" [alt]="match.awayTeam.name" class="team-logo" />
+                  <span class="team-name">{{ match.awayTeam.shortName || match.awayTeam.name }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <!-- Standings Widget -->
+        <div class="widget standings-widget">
+          <div class="widget-header">
+            <h3>Standings</h3>
+            <a routerLink="/standings" class="view-all">Full Table →</a>
+          </div>
+          <div class="standings-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Team</th>
+                  <th>P</th>
+                  <th>GD</th>
+                  <th>Pts</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let team of standings" (click)="onTeamClick(team.team.id)">
+                  <td class="rank" [class.champions]="team.position === 1">{{ team.position }}</td>
+                  <td class="team-cell">
+                    <img [src]="getTeamImageUrl(team.team.id)" [alt]="team.team.name" class="team-logo-small" />
+                    <span class="team-name">{{ team.team.shortName || team.team.name }}</span>
+                  </td>
+                  <td>{{ team.matches }}</td>
+                  <td [class.positive]="team.goalDifference > 0" [class.negative]="team.goalDifference < 0">
+                    {{ team.goalDifference > 0 ? '+' : '' }}{{ team.goalDifference }}
+                  </td>
+                  <td class="points">{{ team.points }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Top Scorers Widget -->
+        <div class="widget scorers-widget">
+          <div class="widget-header">
+            <h3>Top Scorers</h3>
+            <a routerLink="/stats" class="view-all">View All →</a>
+          </div>
+          <div class="scorers-list">
+            <div 
+              class="scorer-item clickable" 
+              *ngFor="let player of topScorers; let i = index"
+              (click)="onPlayerClick(player.player.id)"
+            >
+              <span class="scorer-rank">{{ i + 1 }}</span>
+              <img [src]="getPlayerImageUrl(player.player.id)" [alt]="player.player.name" class="scorer-photo" 
+                   onerror="this.src='https://www.sofascore.com/static/images/placeholders/player.svg'" />
+              <div class="scorer-info">
+                <span class="scorer-name">{{ player.player.name }}</span>
+                <span class="scorer-team" (click)="onTeamClick(player.team.id); $event.stopPropagation()">{{ player.team.name }}</span>
+              </div>
+              <span class="scorer-goals">{{ player.statistics.goals }}</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>

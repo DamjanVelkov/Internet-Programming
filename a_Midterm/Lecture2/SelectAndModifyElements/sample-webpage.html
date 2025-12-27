@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A comprehensive webpage demonstrating various HTML elements">
+    <meta name="keywords" content="HTML, elements, web development, tutorial">
+    <meta name="author" content="UACS Internet Programming 2025">
+    <title>Comprehensive HTML Elements Demo</title>
+    <style>
+        /* Basic CSS for better presentation */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        nav {
+            background-color: #555;
+            padding: 0.5rem;
+        }
+        
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        nav li {
+            margin: 0 15px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+        
+        nav a:hover {
+            background-color: #777;
+        }
+        
+        main {
+            padding: 20px 0;
+        }
+        
+        section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        
+        aside {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid #333;
+        }
+        
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #555;
+        }
+        
+        .highlight {
+            background-color: yellow;
+        }
+        
+        .important {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <script src="script.js"></script>
+    <div class="container">
+        <header>
+            <h1>HTML Elements Demonstration</h1>
+            <p>A comprehensive showcase of various HTML elements</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="#text-elements">Text Elements</a></li>
+                <li><a href="#media-elements">Media</a></li>
+                <li><a href="#form-elements">Forms</a></li>
+                <li><a href="#table-elements">Tables</a></li>
+                <li><a href="#semantic-elements">Semantic</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <div class="two-column">
+                <div>
+                    <section id="text-elements">
+                        <h2>Text and Content Elements</h2>
+                        
+                        <article>
+                            <h3>Headings Hierarchy</h3>
+                            <h1 id="local-heading">
+                                Heading 1 (H1)
+                            </h1>
+                            <h2>Heading 2 (H2)</h2>
+                            <h3>Heading 3 (H3)</h3>
+                            <h4>Heading 4 (H4)</h4>
+                            <h5>Heading 5 (H5)</h5>
+                            <h6>Heading 6 (H6)</h6>
+                        </article>
+
+                        <article>
+                            <h3>Paragraphs and Text Formatting</h3> 
+                            <button type="button" id="div-adder">Click Me!</button>
+                            <div id="container">
+                                I'm a container!
+                            </div>
+                            <p>This is a <strong>paragraph</strong> with <em>emphasized text</em>. 
+                            You can also use <b>bold text</b> and <i>italic text</i>. 
+                            Here's some <mark class="highlight">highlighted text</mark> and 
+                            <span class="important">important text</span>.</p>
+                            
+                            <p>This paragraph contains <small>small text</small>, 
+                            <del>deleted text</del>, <ins>inserted text</ins>, 
+                            <sup>superscript</sup>, <sub>subscript</sub>, and 
+                            <code>inline code</code>.</p>
+                            
+                            <blockquote cite="https://www.example.com">
+                                "This is a blockquote element used for longer quotations."
+                                <footer>— <cite>Anonymous Author</cite></footer>
+                            </blockquote>
+                            
+                            <pre>
+This is preformatted text that preserves
+    spaces and line breaks
+        exactly as written.
+            </pre>
+                        </article>
+
+                        <article>
+                            <h3>Lists</h3>
+                            
+                            <h4>Unordered List</h4>
+                            <ul>
+                                <li>First item</li>
+                                <li>Second item
+                                    <ul>
+                                        <li>Nested item 1</li>
+                                        <li>Nested item 2</li>
+                                    </ul>
+                                </li>
+                                <li>Third item</li>
+                            </ul>
+                            
+                            <h4>Ordered List</h4>
+                            <ol>
+                                <li>First step</li>
+                                <li>Second step</li>
+                                <li>Third step</li>
+                            </ol>
+                            
+                            <h4>Description List</h4>
+                            <dl>
+                                <dt>HTML</dt>
+                                <dd>HyperText Markup Language</dd>
+                                <dt>CSS</dt>
+                                <dd>Cascading Style Sheets</dd>
+                                <dt>JavaScript</dt>
+                                <dd>Programming language for web interactivity</dd>
+                            </dl>
+                        </article>
+                    </section>
+
+                    <section id="media-elements">
+                        <h2>Media Elements</h2>
+                        
+                        <article>
+                            <h3>Images</h3>
+                            <img src="https://via.placeholder.com/300x200/333/fff?text=Sample+Image" 
+                                 alt="Sample placeholder image" 
+                                 width="300" 
+                                 height="200">
+                            
+                            <figure>
+                                <img src="https://via.placeholder.com/250x150/666/fff?text=Figure+Image" 
+                                     alt="Figure with caption">
+                                <figcaption>This is a figure with a caption explaining the image.</figcaption>
+                            </figure>
+                        </article>
+                    </section>
+
+                    <section id="form-elements">
+                        <h2>Form Elements</h2>
+                        
+                        <form action="#" method="post">
+                            <fieldset>
+                                <legend>Personal Information</legend>
+                                
+                                <div class="form-group">
+                                    <label for="fullname">Full Name:</label>
+                                    <input type="text" id="fullname" name="fullname" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <input type="email" id="email" name="email" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="password">Password:</label>
+                                    <input type="password" id="password" name="password" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="birthdate">Birth Date:</label>
+                                    <input type="date" id="birthdate" name="birthdate">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="age">Age:</label>
+                                    <input type="number" id="age" name="age" min="1" max="120">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="website">Website:</label>
+                                    <input type="url" id="website" name="website" placeholder="https://example.com">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="phone">Phone:</label>
+                                    <input type="tel" id="phone" name="phone">
+                                </div>
+                            </fieldset>
+                            
+                            <fieldset>
+                                <legend>Preferences</legend>
+                                
+                                <div class="form-group">
+                                    <label for="country">Country:</label>
+                                    <select id="country" name="country">
+                                        <option value="">Select a country</option>
+                                        <option value="us">United States</option>
+                                        <option value="ca">Canada</option>
+                                        <option value="uk">United Kingdom</option>
+                                        <option value="de">Germany</option>
+                                        <option value="fr">France</option>
+                                        <option value="mk">North Macedonia</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Gender:</label>
+                                    <label><input type="radio" name="gender" value="male"> Male</label>
+                                    <label><input type="radio" name="gender" value="female"> Female</label>
+                                    <label><input type="radio" name="gender" value="other"> Other</label>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Interests:</label>
+                                    <label><input type="checkbox" name="interests" value="programming"> Programming</label>
+                                    <label><input type="checkbox" name="interests" value="design"> Design</label>
+                                    <label><input type="checkbox" name="interests" value="music"> Music</label>
+                                    <label><input type="checkbox" name="interests" value="sports"> Sports</label>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="bio">Biography:</label>
+                                    <textarea id="bio" name="bio" rows="4" placeholder="Tell us about yourself..."></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="volume">Volume:</label>
+                                    <input type="range" id="volume" name="volume" min="0" max="100" value="50">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="color">Favorite Color:</label>
+                                    <input type="color" id="color" name="color" value="#ff0000">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="file">Upload File:</label>
+                                    <input type="file" id="file" name="file" accept=".jpg,.png,.pdf">
+                                </div>
+                            </fieldset>
+                            
+                            <div class="form-group">
+                                <button type="submit">Submit Form</button>
+                                <button type="reset">Reset Form</button>
+                                <input type="button" value="Custom Button" onclick="alert('Button clicked!')">
+                            </div>
+                        </form>
+                    </section>
+
+                    <section id="table-elements">
+                        <h2>Table and Data Elements</h2>
+                        
+                        <table>
+                            <caption>Student Grades Table</caption>
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Subject</th>
+                                    <th>Grade</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>John Doe</td>
+                                    <td>Mathematics</td>
+                                    <td>95</td>
+                                    <td>Excellent</td>
+                                </tr>
+                                <tr>
+                                    <td>Jane Smith</td>
+                                    <td>Physics</td>
+                                    <td>87</td>
+                                    <td>Good</td>
+                                </tr>
+                                <tr>
+                                    <td>Bob Johnson</td>
+                                    <td>Chemistry</td>
+                                    <td>92</td>
+                                    <td>Very Good</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2"><strong>Average</strong></td>
+                                    <td><strong>91.3</strong></td>
+                                    <td><strong>Good</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </section>
+
+                    <section id="semantic-elements">
+                        <h2>Semantic HTML5 Elements</h2>
+                        
+                        <article>
+                            <header>
+                                <h3>Article Title</h3>
+                                <p>Published on <time datetime="2025-09-30">September 30, 2025</time></p>
+                            </header>
+                            
+                            <p>This is an article element that represents a standalone piece of content.</p>
+                            
+                            <section>
+                                <h4>Article Section</h4>
+                                <p>This section is part of the article above.</p>
+                            </section>
+                        </article>
+
+                        <details>
+                            <summary>Click to expand details</summary>
+                            <p>This content is hidden by default and revealed when the summary is clicked.</p>
+                        </details>
+
+                        <div>
+                            <h4>Progress and Meter Elements</h4>
+                            <label for="file-progress">File download progress:</label>
+                            <progress id="file-progress" value="70" max="100">70%</progress>
+                            
+                            <label for="disk-usage">Disk usage:</label>
+                            <meter id="disk-usage" value="6" min="0" max="10">6 out of 10</meter>
+                        </div>
+                    </section>
+                </div>
+
+                <aside>
+                    <h3>Sidebar Content</h3>
+                    <p>This is an aside element representing content that is tangentially related to the main content.</p>
+                    
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank">MDN HTML Documentation</a></li>
+                        <li><a href="https://validator.w3.org/" target="_blank">HTML Validator</a></li>
+                        <li><a href="https://html.spec.whatwg.org/" target="_blank">HTML Specification</a></li>
+                    </ul>
+                    
+                    <h4>Contact Information</h4>
+                    <address>
+                        UACS Internet Programming<br>
+                        University American College Skopje<br>
+                        Email: <a href="mailto:contact@uacs.edu.mk">contact@uacs.edu.mk</a><br>
+                        Phone: <a href="tel:+38970123456">+389 70 123 456</a>
+                    </address>
+                </aside>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 UACS Internet Programming. All rights reserved.</p>
+            <p>This webpage demonstrates various HTML elements for educational purposes.</p>
+        </footer>
+    </div>
+
+</body>
+</html>
