@@ -1,0 +1,29 @@
+<main class="main">
+  <div class="content">
+    <div class="left-side">
+      <h1>Hello, {{ title }}</h1>
+      <p>Congratulations! Your app is running. 🎉</p>
+
+      <p>This is an examle paragraph, boring one.</p>
+      <p>This is another example paragraph, even more boring one.</p>
+      <p [ngClass]="importantClasses">This is important</p>
+      <p>This is not important</p>
+      <p important [active]="active">This is importanter</p>
+
+      <span important> Important span </span>
+      <span> Not important span </span>
+
+      <div important>Important div</div>
+      <div>Not important div</div>
+
+      <button (click)="changeClasses()">Toggle Classes</button>
+      <button (click)="changeActive()">Toggle Active</button>
+
+      <p important>{{ now | date:'shortTime' }} </p>
+
+      <p>{{ weko | fullName }} </p>
+    </div>
+    <div class="divider" role="separator" aria-label="Divider"></div>
+    <div class="right-side"></div>
+  </div>
+</main>

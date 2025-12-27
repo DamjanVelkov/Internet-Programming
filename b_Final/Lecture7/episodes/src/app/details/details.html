@@ -1,0 +1,15 @@
+<div *ngIf="episode !== null; else noEpisode">
+    <h2>{{ episode.title }}</h2>
+    <p><strong>Series:</strong> {{ episode.series }}</p>
+    <p><strong>Year:</strong> {{ episode.year }}</p>
+    <p><strong>Doctor:</strong> {{ episode.doctor }}</p>
+    <p><strong>Companion:</strong> {{ episode.companion }}</p>
+    <p><strong>Plot:</strong> {{ episode.plot }}</p>
+    <ul *ngFor="let castMember of episode.cast">
+        <li>{{ castMember }}</li>
+    </ul>
+</div>
+  
+<ng-template #noEpisode>
+    <div>No episode available.</div>
+</ng-template>
